@@ -18,9 +18,6 @@
 #' print(returns_plot)
 create_returns_plot <- function(price_data, start_date, end_date = Sys.Date(), variables, combo_bets = NULL, add_risk_parity = FALSE) {
 
-  # Get recession data and merge with existing data
-  data <- add_recession_data(data)
-
   # First, call create_returns_table to get the returns data
   returns_data <- create_returns_table(price_data, start_date, end_date, variables, combo_bets, add_risk_parity)
 

@@ -22,6 +22,7 @@
 #' )
 #' returns_table <- create_returns_table(my_price_data, start_date, end_date, variables, combo_bets)
 create_returns_table <- function(price_data, start_date, end_date = Sys.Date(), variables, combo_bets = NULL, add_risk_parity = FALSE) {
+
   # Convert start_date and end_date to Date objects
   start_date <- as.Date(start_date)
   end_date <- as.Date(end_date)
