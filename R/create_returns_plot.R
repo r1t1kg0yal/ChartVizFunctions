@@ -1,5 +1,25 @@
-# Asset returns plot
+#' Create a Returns Plot
+#'
+#' This function generates a plot visualizing the returns of specified financial instruments over a given time period. It also supports the visualization of combo bets and an optional risk parity calculation.
+#'
+#' @param price_data A data frame with a column of dates and columns representing price data for various financial instruments.
+#' @param start_date The start date for calculating returns, formatted as 'YYYY-MM-DD'.
+#' @param end_date The end date for calculating returns, formatted as 'YYYY-MM-DD'. Default is the current system date.
+#' @param variables A character vector of column names in 'price_data' representing the financial instruments for which returns are to be calculated.
+#' @param combo_bets An optional list of lists, each containing information about a combination bet, including variables and their respective sizes.
+#' @param add_risk_parity A logical flag indicating whether to add a column calculating risk parity based returns. Default is FALSE.
+#'
+#' @return A ggplot object representing the returns plot.
+#' @export
+#'
+#' @examples
+#' # Assuming 'my_price_data' is your dataset with required columns
+#' returns_plot <- create_returns_plot(my_price_data, "2020-01-01", "2020-12-31", c("AAPL", "MSFT"), NULL, FALSE)
+#' print(returns_plot)
 create_returns_plot <- function(price_data, start_date, end_date = Sys.Date(), variables, combo_bets = NULL, add_risk_parity = FALSE) {
+
+  # Get recession data and merge with existing data
+  data <- add_recession_data(data)
 
   # First, call create_returns_table to get the returns data
   returns_data <- create_returns_table(price_data, start_date, end_date, variables, combo_bets, add_risk_parity)

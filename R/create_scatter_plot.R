@@ -1,3 +1,32 @@
+#' Create a Scatter Plot
+#'
+#' This function generates a scatter plot for the relationship between two variables over time. It includes options for highlighting specific dates, adding a line of best fit, and log transformations.
+#'
+#' @param data A data frame containing the dataset for plotting.
+#' @param x_var Name of the variable to be plotted on the x-axis.
+#' @param y_var Name of the variable to be plotted on the y-axis.
+#' @param x_label Label for the x-axis.
+#' @param y_label Label for the y-axis.
+#' @param title Optional title for the plot.
+#' @param highlight_dates Dates to highlight on the plot.
+#' @param highlight_latest A boolean indicating whether to highlight the latest data point.
+#' @param include_lof Method for line of best fit ('lm', 'loess', or NULL).
+#' @param log_x A boolean indicating whether to apply a logarithmic transformation to the x-axis.
+#' @param log_y A boolean indicating whether to apply a logarithmic transformation to the y-axis.
+#' @param start_date The starting date for the plot (optional).
+#' @param end_date The ending date for the plot (optional).
+#' @param x_yoy A boolean indicating whether to calculate year-over-year change for the x variable.
+#' @param y_yoy A boolean indicating whether to calculate year-over-year change for the y variable.
+#' @param date_ranges A list of date ranges to highlight on the plot.
+#'
+#' @return A ggplot object representing the scatter plot.
+#' @export
+#'
+#' @examples
+#' # Assuming 'data' is your dataset with required columns
+#' scatter_plot <- create_scatter_plot(data, "x_variable", "y_variable", "X Axis Label", "Y Axis Label",
+#'                                    "Scatter Plot Title", c("2020-01-01", "2021-01-01"), FALSE, NULL, FALSE, FALSE)
+#' print(scatter_plot)
 create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NULL,
                                 highlight_dates = NULL, highlight_latest = FALSE,
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,

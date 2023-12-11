@@ -1,4 +1,31 @@
-# No bounds or y axis breaks functionality
+#' Create a Multi-Scatter Plot
+#'
+#' This function generates a scatter plot for multiple variables over time, with options for different plot types and additional smoothing.
+#'
+#' @param data A data frame containing the dataset for plotting. Must include a 'date' column.
+#' @param var_name_list A vector of variable names in 'data' to be plotted.
+#' @param var_label_list A vector of labels corresponding to the variables for plot legend.
+#' @param start_year The starting year for the plot.
+#' @param end_year The ending year for the plot.
+#' @param x_axis_breaks Breaks for the x-axis, usually years.
+#' @param x_axis_title Title for the x-axis.
+#' @param y_axis_title Title for the y-axis.
+#' @param title Title of the plot.
+#' @param plot_type Type of the plot ('level' or 'yoy' for year-over-year).
+#' @param y_axis_breaks Break points for the y-axis (optional).
+#' @param include_smooth A boolean indicating whether to include a Loess smoothed line.
+#' @param y_axis_lower_bound Lower bound for the y-axis (optional).
+#' @param y_axis_upper_bound Upper bound for the y-axis (optional).
+#'
+#' @return A ggplot object representing the multi-scatter plot.
+#' @export
+#'
+#' @examples
+#' # Assuming 'data' is your dataset with required columns
+#' multi_scatter_plot <- create_multi_scatter_plot(data, c("var1", "var2"), c("Label 1", "Label 2"), 2010, 2020, 1,
+#'                                                  "X Axis Title", "Y Axis Title", "Multi-Scatter Plot Title", "level", NULL,
+#'                                                  FALSE, NULL, NULL)
+#' print(multi_scatter_plot)
 create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                       x_axis_breaks, x_axis_title, y_axis_title, title, plot_type, y_axis_breaks = NULL,
                                       include_smooth = FALSE, y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {

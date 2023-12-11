@@ -1,7 +1,37 @@
-# Multi line plot
+#' Create a Multi-Line Plot
+#'
+#' This function generates a multi-line plot for a list of variables over time, with options for different types of plots and additional smoothing.
+#'
+#' @param data A data frame containing the dataset for plotting. Must include a 'date' column.
+#' @param var_name_list A vector of variable names in 'data' to be plotted.
+#' @param var_label_list A vector of labels corresponding to the variables for plot legend.
+#' @param start_year The starting year for the plot.
+#' @param end_year The ending year for the plot.
+#' @param x_axis_breaks Breaks for the x-axis, usually years.
+#' @param x_axis_title Title for the x-axis.
+#' @param y_axis_title Title for the y-axis.
+#' @param title Title of the plot.
+#' @param plot_type Type of the plot ('level' or 'yoy' for year-over-year).
+#' @param y_axis_breaks Break points for the y-axis (optional).
+#' @param include_smooth A boolean indicating whether to include a Loess smoothed line.
+#' @param y_axis_lower_bound Lower bound for the y-axis (optional).
+#' @param y_axis_upper_bound Upper bound for the y-axis (optional).
+#'
+#' @return A ggplot object representing the multi-line plot.
+#' @export
+#'
+#' @examples
+#' # Assuming 'data' is your dataset with required columns
+#' multi_line_plot <- create_multi_line_plot(data, c("var1", "var2"), c("Label 1", "Label 2"), 2010, 2020, 1,
+#'                                           "X Axis Title", "Y Axis Title", "Multi-Line Plot Title", "level", NULL,
+#'                                           FALSE, NULL, NULL)
+#' print(multi_line_plot)
 create_multi_line_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                    x_axis_breaks, x_axis_title, y_axis_title, title, plot_type, y_axis_breaks = NULL,
                                    include_smooth = FALSE, y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
+
+  # Get recession data and merge with existing data
+  data <- add_recession_data(data)
 
   # Validate inputs
   if (!plot_type %in% c('level', 'yoy')) {

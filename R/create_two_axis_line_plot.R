@@ -1,5 +1,30 @@
-# Two y axis plot
+#' Create a Two-Axis Line Plot
+#'
+#' This function generates a line plot for two variables, each with its own y-axis, over a given time period. The plot includes recession bars and supports different types of data transformations.
+#'
+#' @param data A data frame containing the dataset for plotting.
+#' @param variables A vector of two variable names in 'data' to be plotted.
+#' @param var_labels A vector of two labels corresponding to the variables.
+#' @param start_date The starting date for the plot, formatted as 'YYYY-MM-DD'.
+#' @param end_date The ending date for the plot, formatted as 'YYYY-MM-DD'.
+#' @param plot_title Title of the plot.
+#' @param x_axis_breaks Breaks for the x-axis, usually years.
+#' @param var_1_type Type of transformation for the first variable ('level' or 'yoy' for year-over-year).
+#' @param var_2_type Type of transformation for the second variable ('level' or 'yoy' for year-over-year).
+#'
+#' @return A ggplot object representing the two-axis line plot.
+#' @export
+#'
+#' @examples
+#' # Assuming 'data' is your dataset with required columns
+#' two_axis_plot <- create_two_axis_line_plot(data, c("var1", "var2"), c("Variable 1", "Variable 2"),
+#'                                            "2020-01-01", "2020-12-31", "Two-Axis Line Plot", 1, "level", "yoy")
+#' print(two_axis_plot)
 create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type, var_2_type) {
+
+  # Get recession data and merge with existing data
+  data <- add_recession_data(data)
+
   # Check if the correct number of variables and variable labels are provided
   if (length(variables) != 2) {
     stop("Please provide exactly two variables.")
