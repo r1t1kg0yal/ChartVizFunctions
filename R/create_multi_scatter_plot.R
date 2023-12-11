@@ -1,0 +1,105 @@
+# No bounds or y axis breaks functionality
+create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
+                                      x_axis_breaks, x_axis_title, y_axis_title, title, plot_type, y_axis_breaks = NULL,
+                                      include_smooth = FALSE, y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
+
+  # Assuming 'data' is your dataframe and 'var_name_list' contains the names of the variables you are plotting
+  data <- data %>%
+    filter(!is.na(date)) %>%  # Remove NAs in date if necessary
+    filter_at(vars(one_of(var_name_list)), all_vars(!is.na(.)))  # Remove NAs in all plotting variables
+
+  # Validate inputs
+  if (!plot_type %in% c('level', 'yoy')) {
+    stop("Invalid plot type: must be 'level' or 'yoy'")
+  }
+
+  if (length(var_name_list) != length(var_label_list)) {
+    stop("The lengths of 'var_name_list' and 'var_label_list' must be the same")
+  }
+
+  # Determine the frequency of the data
+  date_diffs <- diff(data$date)
+  median_diff <- median(date_diffs)
+
+  # Set the lag based on the frequency
+  lag_days <- if (median_diff <= 1) { # Daily
+    365
+  } else if (median_diff <= 7) { # Weekly
+    52
+  } else if (median_diff <= 31) { # Monthly
+    12
+  } else if (median_diff <= 92) { # Quarterly
+    4
+  } else { # Annual or longer
+    1
+  }
+
+  # Wrap labels to a specified width
+  wrapped_labels <- sapply(var_label_list, function(label) str_wrap(label, width = 20))
+
+  # Reshape data to long format
+  long_data <- data %>%
+    select(date, one_of(var_name_list)) %>%
+    gather(key = "variable", value = "value", -date) %>%
+    mutate(
+      year = year(date),
+      variable_label = factor(variable, levels = var_name_list, labels = wrapped_labels)
+    )
+
+  if(plot_type == "level") {
+    long_data <- long_data %>%
+      filter(year(date) >= start_year & year(date) <= end_year)
+  } else if(plot_type == "yoy") {
+    long_data <- long_data %>%
+      group_by(variable) %>%
+      mutate(yoy_change = (value / lag(value, lag_days) - 1) * 100) %>%
+      ungroup() %>%
+      filter(year(date) >= start_year & year(date) <= end_year, !is.na(yoy_change))
+  }
+
+  # Base plot
+  y_value <- if (plot_type == "level") "value" else "yoy_change"
+  p <- ggplot(long_data, aes(x = date, y = get(y_value, long_data), color = variable_label)) +
+    geom_rect(data = get_recession_periods(data) %>%
+                filter(start >= as.Date(paste0(start_year, "-01-01")) & end <= as.Date(paste0(end_year, "-12-31"))),
+              aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.5, inherit.aes = FALSE) +
+    geom_point(size = 0.1)
+
+  # Add Loess smooth line if include_smooth is TRUE
+  if(include_smooth && plot_type == "level") {
+    p <- p + geom_smooth(se = FALSE, method = "loess", span = 0.1, size = 0.2)
+  }
+
+  # Custom color palette
+  custom_colors <- c("blue3", "red3", "green4", "darkgrey", "darkorange2", "yellow3", "purple2", "sienna4", "deepskyblue3", "orchid2")
+
+  # Add additional plot features
+  p <- p +
+    scale_x_date(breaks = year_breaks_lineplot_x_axis(data$date, x_axis_breaks), labels = date_format("%Y")) +
+    xlab(x_axis_title) +
+    ylab(y_axis_title) +
+    theme_minimal(base_size = 10) +
+    theme(
+      panel.grid.major = element_line(color = "#d3d3d3", linewidth = 0.2), # Light gray color for major gridlines
+      panel.grid.minor = element_line(color = "#d3d3d3", linewidth = 0.1),  # Light gray color for minor gridlines
+      legend.key.height = unit(1, "lines"),  # Adjust the height of the legend keys if needed
+      legend.text = element_text(margin = margin(t = 1, b = 1)),  # Set top and bottom margin, adjust line height
+      legend.spacing.y = unit(2, "lines"),  # Adjust spacing between legend keys
+      legend.position = "right"  # Adjust if needed to place the legend on the right
+    ) +
+    ggtitle(title) +
+    scale_color_manual(values = custom_colors) +
+    guides(color = guide_legend(title = NULL))
+
+  # Combine conditional Y-axis scale and boundaries into a single scale_y_continuous call
+  p <- p + scale_y_continuous(
+    labels = scales::number_format(big.mark = ",")
+  )
+
+  if(plot_type == "yoy") {
+    p <- p + geom_hline(yintercept = 0, size = .2, color = "black") # Horizontal line at 0%
+  }
+
+  # Return the plot
+  return(p)
+}
