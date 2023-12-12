@@ -9,13 +9,3 @@ License:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-Depends:
-  ggplot2,
-  dplyr,
-  tidyverse,
-  fredr,
-  lubridate,
-  zoo,
-  stringr,
-  devtools,
-  scales
