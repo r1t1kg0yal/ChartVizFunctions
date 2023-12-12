@@ -52,7 +52,9 @@ create_returns_plot <- function(price_data, start_date, end_date = Sys.Date(), v
           legend.title = element_blank(),
           legend.key = element_blank(),  # Remove the key symbols from the legend
           panel.grid.major = element_line(color = "#d3d3d3", linewidth = 0.2), # Light gray color for major gridlines
-          panel.grid.minor = element_line(color = "#d3d3d3", linewidth = 0.1)) + # Light gray color for minor gridlines
+          panel.grid.minor = element_line(color = "#d3d3d3", linewidth = 0.1), # Light gray color for minor gridlines
+          legend.margin = margin(t = -10, b = 0, l = 0, r = 0) # Reduce space around the legend
+        ) +
     guides(color = guide_legend(override.aes = list(size = 1))) +
     geom_hline(yintercept = 0, size = .25, color = "lightgrey")
 

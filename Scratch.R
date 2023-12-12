@@ -27,9 +27,9 @@ create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits"
                  include_smooth = FALSE)
 
 create_returns_plot(price_data = weekdaily_data, start_date = "2023-01-01", variables = c("SPY", "TLT"),
-                    combo_bets = list(combo_bet("SPY", "TLT", 1, -1)), add_risk_parity = FALSE)
+                    combo_bets = list(combo_bet("SPY", "TLT", 1, -1)), add_risk_parity = TRUE)
 
 create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
-                       plot_type = "level", include_smooth = TRUE)
+                       plot_type = "level", include_smooth = FALSE)
