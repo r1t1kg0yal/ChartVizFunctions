@@ -21,11 +21,15 @@
 #' @export
 #'
 #' @examples
-#' # Assuming 'data' is your dataset with required columns
-#' multi_line_plot <- create_multi_line_plot(data, c("var1", "var2"), c("Label 1", "Label 2"), 2010, 2020, 1,
-#'                                           "X Axis Title", "Y Axis Title", "Multi-Line Plot Title", "level", NULL,
-#'                                           FALSE, NULL, NULL)
-#' print(multi_line_plot)
+#' create_multi_line_plot(data = weekly_data, var_name_list = c("bank_assets_sa", "bank_loans_sa", "bank_securities_sa"),
+#'                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+#'                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
+#'                        plot_type = "level", include_smooth = FALSE)
+#' create_multi_line_plot(data = weekly_data, var_name_list = c("bank_assets_sa", "bank_loans_sa", "bank_securities_sa"),
+#'                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+#'                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY % Chg", title = "Commercial Banks",
+#'                        plot_type = "yoy", y_axis_breaks = 10, include_smooth = TRUE)
+
 create_multi_line_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                    x_axis_breaks, x_axis_title, y_axis_title, title, plot_type, y_axis_breaks = NULL,
                                    include_smooth = FALSE, y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
@@ -108,9 +112,10 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
       panel.grid.major = element_line(color = "#d3d3d3", linewidth = 0.2), # Light gray color for major gridlines
       panel.grid.minor = element_line(color = "#d3d3d3", linewidth = 0.1),  # Light gray color for minor gridlines
       legend.key.height = unit(1, "lines"),  # Adjust the height of the legend keys if needed
-      legend.text = element_text(margin = margin(t = 1, b = 1)),  # Set top and bottom margin, adjust line height
+      legend.text = element_text(margin = margin(t = 0, b = 0)),  # Set top and bottom margin, adjust line height
       legend.spacing.y = unit(2, "lines"),  # Adjust spacing between legend keys
-      legend.position = "right"  # Adjust if needed to place the legend on the right
+      legend.position = "bottom",  # Adjust if needed to place the legend on the right
+      legend.margin = margin(t = -10, b = 0, l = 0, r = 0) # Reduce space around the legend
     ) +
     ggtitle(title) +
     scale_color_manual(values = custom_colors) +

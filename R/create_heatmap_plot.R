@@ -20,10 +20,16 @@
 #' @export
 #'
 #' @examples
-#' # Assuming 'data' is your dataset with required columns
-#' heatmap_plot <- create_heatmap_plot(data, "initial_claims_nsa", 2010, 2020, 1, "Initial Claims",
-#'                                    "monthly", "level", FALSE, NULL, FALSE, NULL, 2)
-#' print(heatmap_plot)
+#' create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 2000,
+#'                     end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
+#'                     frequency = "weekly", change_space = "yoy", num_decimals = 1,
+#'                     include_cell_numbers = TRUE, scaling_power = NULL, flip_colors = TRUE)
+#'
+#' create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
+#'                     end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
+#'                     frequency = "monthly", change_space = "level", num_decimals = 1,
+#'                     include_cell_numbers = TRUE, scaling_power = 5, flip_colors = TRUE)
+
 create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_breaks, title,
                                 frequency, change_space, flip_colors = FALSE, override_subtitle = NULL,
                                 include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL) {

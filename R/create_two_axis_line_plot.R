@@ -16,10 +16,10 @@
 #' @export
 #'
 #' @examples
-#' # Assuming 'data' is your dataset with required columns
-#' two_axis_plot <- create_two_axis_line_plot(data, c("var1", "var2"), c("Variable 1", "Variable 2"),
-#'                                            "2020-01-01", "2020-12-31", "Two-Axis Line Plot", 1, "level", "yoy")
-#' print(two_axis_plot)
+#' create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "ngdp_monthly"),
+#'                           var_labels = c("Fed Funds Rate (%)", "NGDP YoY % Change"), start_date = "2000-01-01",
+#'                           end_date = "2024-01-01", x_axis_breaks = 5, plot_title = "Fed Funds and NGDP",
+#'                           var_1_type = "level", var_2_type = "yoy")
 create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type, var_2_type) {
 
   # Get recession data and merge with existing data

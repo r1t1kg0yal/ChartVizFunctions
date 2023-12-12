@@ -63,8 +63,18 @@ A ggplot object representing the scatter plot.
 This function generates a scatter plot for the relationship between two variables over time. It includes options for highlighting specific dates, adding a line of best fit, and log transformations.
 }
 \examples{
-# Assuming 'data' is your dataset with required columns
-scatter_plot <- create_scatter_plot(data, "x_variable", "y_variable", "X Axis Label", "Y Axis Label",
-                                   "Scatter Plot Title", c("2020-01-01", "2021-01-01"), FALSE, NULL, FALSE, FALSE)
-print(scatter_plot)
+create_scatter_plot(data = monthly_data, x_var = "total_completed_nsa", y_var = "total_housing_starts_nsa",
+                    x_label = "Completed (1000s)", y_label = "Starts (1000s)",
+                    title = "Housings Starts vs Completed",
+                    highlight_dates = c("2022-01-01", "2021-01-01", "2023-01-01", "2020-01-01", "2019-01-01", "2018-01-01"),
+                    highlight_latest = TRUE,
+                    include_lof = NULL,
+                    log_x = FALSE, log_y = FALSE)
+create_scatter_plot(data = monthly_data, x_var = "ngdp", y_var = "total_housing_starts_nsa",
+                    x_label = "NGDP", y_label = "Starts",
+                    title = "Housings Starts vs NGDP (Logs)",
+                    highlight_dates = c("2022-01-01", "2021-01-01", "2023-01-01", "2020-01-01", "2019-01-01", "2018-01-01"),
+                    highlight_latest = TRUE,
+                    include_lof = "lm",
+                    log_x = TRUE, log_y = TRUE)
 }

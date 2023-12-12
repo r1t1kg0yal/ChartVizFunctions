@@ -54,8 +54,12 @@ A ggplot object representing the line plot.
 This function generates a line plot for a given variable over time, with options for different types of plots and additional smoothing.
 }
 \examples{
-# Assuming 'data' is your dataset with required columns
-line_plot <- create_line_plot(data, "var1", 2010, 2020, 1, "X Axis Title", "Y Axis Title",
-                             "Line Plot Title", "level", NULL, TRUE, NULL, NULL)
-print(line_plot)
+create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
+                 end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "BEA Corporate Profits Less Fed Profits",
+                 plot_type = "level", y_axis_breaks = NULL,
+                 include_smooth = FALSE)
+create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
+                 end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY \% Change", title = "BEA Corporate Profits Less Fed Profits",
+                 plot_type = "yoy", y_axis_breaks = 2,
+                 include_smooth = TRUE)
 }

@@ -57,8 +57,13 @@ A ggplot object representing the differential heatmap.
 This function generates a heatmap plot that visualizes the difference between two variables over time. It integrates recession data and offers various customization options.
 }
 \examples{
-# Assuming 'data' is your dataset with required columns
-diff_heatmap_plot <- create_diff_heatmap_plot(data, "var1", "var2", 2010, 2020, 1, "Differential Heatmap Title",
-                                              "monthly", "level", FALSE, NULL, FALSE, NULL, 2)
-print(diff_heatmap_plot)
+create_diff_heatmap_plot(data = monthly_data, var_1_name = "ngdp_monthly", var_2_name = "m2",
+                         start_year = 2000, end_year = 2023, x_axis_breaks = 5, title = "NGDP less M2 YoY",
+                         frequency = "monthly", change_space = "yoy", override_subtitle = NULL,
+                         flip_colors = FALSE, include_cell_numbers = TRUE, scaling_power = NULL,
+                         num_decimals = 1)
+create_diff_heatmap_plot(data = monthly_data, var_1_name = "total_housing_starts_nsa",
+                         var_2_name = "total_completed_nsa", start_year = 2000, end_year = 2023, x_axis_breaks = 5,
+                         title = "Housing Starts Less Completed", change_space = "level", override_subtitle = "1000s of Homes",
+                         frequency = "monthly", include_cell_numbers = TRUE, scaling_power = 0, num_decimals = 1)
 }

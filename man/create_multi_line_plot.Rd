@@ -57,9 +57,12 @@ A ggplot object representing the multi-line plot.
 This function generates a multi-line plot for a list of variables over time, with options for different types of plots and additional smoothing.
 }
 \examples{
-# Assuming 'data' is your dataset with required columns
-multi_line_plot <- create_multi_line_plot(data, c("var1", "var2"), c("Label 1", "Label 2"), 2010, 2020, 1,
-                                          "X Axis Title", "Y Axis Title", "Multi-Line Plot Title", "level", NULL,
-                                          FALSE, NULL, NULL)
-print(multi_line_plot)
+create_multi_line_plot(data = weekly_data, var_name_list = c("bank_assets_sa", "bank_loans_sa", "bank_securities_sa"),
+                       start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+                       x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
+                       plot_type = "level", include_smooth = FALSE)
+create_multi_line_plot(data = weekly_data, var_name_list = c("bank_assets_sa", "bank_loans_sa", "bank_securities_sa"),
+                       start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+                       x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY \% Chg", title = "Commercial Banks",
+                       plot_type = "yoy", y_axis_breaks = 10, include_smooth = TRUE)
 }

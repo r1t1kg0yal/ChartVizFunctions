@@ -34,16 +34,10 @@ This function generates a plot of yield curves for specified financial instrumen
 }
 \examples{
 # Assuming 'weekdaily_data' is your dataset with required columns
-yield_curve_plot <- create_yield_curve(data = weekdaily_data, plot_title = "Yield Curve",
-                                       var_names = c("three_month_yield", "six_month_yield", "one_year_yield",
-                                                     "two_year_yield", "three_year_yield", "five_year_yield",
-                                                     "seven_year_yield", "ten_year_yield", "twenty_year_yield",
-                                                     "thirty_year_yield"),
-                                       maturities = c("3m", "6m", "1y",
-                                                     "2y", "3y", "5y",
-                                                     "7y", "10y", "20y",
-                                                     "30y"),
-                                       plot_dates = c("2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01",
-                                                      "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"))
-print(yield_curve_plot)
+create_yield_curve(data = weekdaily_data, plot_title = "Yield Curve",
+                   var_names = c("three_month_yield", "six_month_yield", "one_year_yield", "two_year_yield", "three_year_yield", "five_year_yield",
+                                  "seven_year_yield", "ten_year_yield", "twenty_year_yield", "thirty_year_yield"),
+                   maturities = c("3m", "6m", "1y", "2y", "3y", "5y", "7y", "10y", "20y", "30y"),
+                   plot_dates = c("2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01",
+                                  "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"))
 }
