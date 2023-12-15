@@ -12,8 +12,8 @@ create_two_axis_line_plot(
   end_date,
   plot_title,
   x_axis_breaks,
-  var_1_type,
-  var_2_type
+  var_1_type = NULL,
+  var_2_type = NULL
 )
 }
 \arguments{
@@ -31,9 +31,13 @@ create_two_axis_line_plot(
 
 \item{x_axis_breaks}{Breaks for the x-axis, usually years.}
 
-\item{var_1_type}{Type of transformation for the first variable ('level' or 'yoy' for year-over-year).}
+\item{var_1_type}{Type of transformation for the first variable.
+Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
+'mom' for month-over-month, or NULL for no transformation.}
 
-\item{var_2_type}{Type of transformation for the second variable ('level' or 'yoy' for year-over-year).}
+\item{var_2_type}{Type of transformation for the second variable.
+Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
+'mom' for month-over-month, or NULL for no transformation.}
 }
 \value{
 A ggplot object representing the two-axis line plot.
@@ -45,5 +49,5 @@ This function generates a line plot for two variables, each with its own y-axis,
 create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "ngdp_monthly"),
                           var_labels = c("Fed Funds Rate (\%)", "NGDP YoY \% Change"), start_date = "2000-01-01",
                           end_date = "2024-01-01", x_axis_breaks = 5, plot_title = "Fed Funds and NGDP",
-                          var_1_type = "level", var_2_type = "yoy")
+                          var_1_type = NULL, var_2_type = "yoy")
 }

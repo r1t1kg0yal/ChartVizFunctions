@@ -15,8 +15,8 @@
 #' @param log_y A boolean indicating whether to apply a logarithmic transformation to the y-axis.
 #' @param start_date The starting date for the plot (optional).
 #' @param end_date The ending date for the plot (optional).
-#' @param x_yoy A boolean indicating whether to calculate year-over-year change for the x variable.
-#' @param y_yoy A boolean indicating whether to calculate year-over-year change for the y variable.
+#' @param x_change A string indicating whether to calculate a % change for the x variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
+#' @param y_change A string indicating whether to calculate a % change for the y variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
 #' @param date_ranges A list of date ranges to highlight on the plot.
 #'
 #' @return A ggplot object representing the scatter plot.
@@ -42,7 +42,7 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
                                 highlight_dates = NULL, highlight_latest = FALSE,
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,
                                 start_date = NULL, end_date = NULL,
-                                x_yoy = FALSE, y_yoy = FALSE, date_ranges = NULL) {
+                                x_change = NULL, y_change = NULL, date_ranges = NULL) {
 
   library(ggplot2)
   library(dplyr)
@@ -116,15 +116,42 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
     y_label <- paste("Log of", y_label)
   }
 
-  # Calculate YoY change if requested
-  if(x_yoy) {
-    data[[x_var]] <- (data[[x_var]] / lag(data[[x_var]], n = lag_days) - 1) * 100
-    x_label <- paste("YoY % Change in", x_label)
+  # Check and apply x_change and y_change transformations
+  valid_changes <- c("mom", "qoq", "yoy", NULL)
+
+  if (!is.null(x_change) && !(x_change %in% valid_changes)) {
+    stop("Invalid value for x_change: must be 'mom', 'qoq', 'yoy', or NULL")
   }
-  if(y_yoy) {
-    data[[y_var]] <- (data[[y_var]] / lag(data[[y_var]], n = lag_days) - 1) * 100
-    y_label <- paste("YoY % Change in", y_label)
+  if (!is.null(y_change) && !(y_change %in% valid_changes)) {
+    stop("Invalid value for y_change: must be 'mom', 'qoq', 'yoy', or NULL")
   }
+
+  determine_lag <- function(data, change_type) {
+    # Determine the frequency of the data
+    date_diffs <- diff(data$date)
+    median_diff <- median(date_diffs)
+
+    if (change_type == "mom") {
+      return(ifelse(median_diff <= 7, 4, 1)) # Weekly data uses 4 weeks lag, else monthly
+    } else if (change_type == "qoq") {
+      return(ifelse(median_diff <= 31, 13, ifelse(median_diff <= 92, 3, 1))) # Weekly, Monthly, Quarterly
+    } else if (change_type == "yoy") {
+      return(ifelse(median_diff <= 7, 52, ifelse(median_diff <= 31, 12, ifelse(median_diff <= 92, 4, 1)))) # Weekly, Monthly, Quarterly, Annually
+    } else {
+      return(0)
+    }
+  }
+
+  apply_change <- function(data, var, change_type) {
+    lag_value <- determine_lag(data, change_type)
+    if (lag_value > 0) {
+      data[[var]] <- (data[[var]] / lag(data[[var]], n = lag_value) - 1) * 100
+    }
+    return(data)
+  }
+
+  data <- apply_change(data, x_var, x_change)
+  data <- apply_change(data, y_var, y_change)
 
   # Filter out rows with NA in x_var or y_var
   data <- data %>% filter(!is.na(data[[x_var]]) & !is.na(data[[y_var]]))

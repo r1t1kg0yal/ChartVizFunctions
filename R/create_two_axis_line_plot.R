@@ -9,9 +9,12 @@
 #' @param end_date The ending date for the plot, formatted as 'YYYY-MM-DD'.
 #' @param plot_title Title of the plot.
 #' @param x_axis_breaks Breaks for the x-axis, usually years.
-#' @param var_1_type Type of transformation for the first variable ('level' or 'yoy' for year-over-year).
-#' @param var_2_type Type of transformation for the second variable ('level' or 'yoy' for year-over-year).
-#'
+#' @param var_1_type Type of transformation for the first variable.
+#'                  Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
+#'                  'mom' for month-over-month, or NULL for no transformation.
+#' @param var_2_type Type of transformation for the second variable.
+#'                  Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
+#'                  'mom' for month-over-month, or NULL for no transformation.
 #' @return A ggplot object representing the two-axis line plot.
 #' @export
 #'
@@ -19,8 +22,8 @@
 #' create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "ngdp_monthly"),
 #'                           var_labels = c("Fed Funds Rate (%)", "NGDP YoY % Change"), start_date = "2000-01-01",
 #'                           end_date = "2024-01-01", x_axis_breaks = 5, plot_title = "Fed Funds and NGDP",
-#'                           var_1_type = "level", var_2_type = "yoy")
-create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type, var_2_type) {
+#'                           var_1_type = NULL, var_2_type = "yoy")
+create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type = NULL, var_2_type = NULL) {
 
   # Get recession data and merge with existing data
   data <- add_recession_data(data)
@@ -32,22 +35,51 @@ create_two_axis_line_plot <- function(data, variables, var_labels, start_date, e
   if (length(var_labels) != 2) {
     stop("Please provide exactly two variable labels.")
   }
-  # Check the types for both variables
-  if (!(var_1_type %in% c("level", "yoy")) || !(var_2_type %in% c("level", "yoy"))) {
-    stop("var_1_type and var_2_type must be either 'level' or 'yoy'.")
-  }
 
   # Convert dates to Date class and ensure data is sorted
   data <- data %>%
     mutate(date = as.Date(date)) %>%
     arrange(date)
 
-  # Convert data to yoy if requested
-  if (var_1_type == "yoy") {
-    data[[variables[1]]] <- (data[[variables[1]]] / lag(data[[variables[1]]], 12) - 1) * 100
+  # Validate types for both variables
+  valid_types <- c("yoy", "qoq", "mom", NULL)
+  if (!is.null(var_1_type) && !(var_1_type %in% valid_types)) {
+    stop("var_1_type must be 'yoy', 'qoq', 'mom', or NULL.")
   }
-  if (var_2_type == "yoy") {
-    data[[variables[2]]] <- (data[[variables[2]]] / lag(data[[variables[2]]], 12) - 1) * 100
+  if (!is.null(var_2_type) && !(var_2_type %in% valid_types)) {
+    stop("var_2_type must be 'yoy', 'qoq', 'mom', or NULL.")
+  }
+
+  determine_lag <- function(data, change_type) {
+    # Determine the frequency of the data
+    date_diffs <- diff(data$date)
+    median_diff <- median(date_diffs)
+
+    if (change_type == "mom") {
+      return(ifelse(median_diff <= 7, 4, 1)) # Weekly data uses 4 weeks lag, else monthly
+    } else if (change_type == "qoq") {
+      return(ifelse(median_diff <= 31, 13, ifelse(median_diff <= 92, 3, 1))) # Weekly, Monthly, Quarterly
+    } else if (change_type == "yoy") {
+      return(ifelse(median_diff <= 7, 52, ifelse(median_diff <= 31, 12, ifelse(median_diff <= 92, 4, 1)))) # Weekly, Monthly, Quarterly, Annually
+    } else {
+      return(0)
+    }
+  }
+
+  apply_change <- function(data, var, change_type) {
+    lag_value <- determine_lag(data, change_type)
+    if (lag_value > 0) {
+      data[[var]] <- (data[[var]] / lag(data[[var]], n = lag_value) - 1) * 100
+    }
+    return(data)
+  }
+
+  # Convert data to change if requested
+  if (!is.null(var_1_type)) {
+    data <- apply_change(data, variables[1], var_1_type)
+  }
+  if (!is.null(var_2_type)) {
+    data <- apply_change(data, variables[2], var_2_type)
   }
 
   # Filter data based on the provided date range

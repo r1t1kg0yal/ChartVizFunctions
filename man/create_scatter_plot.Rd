@@ -18,8 +18,8 @@ create_scatter_plot(
   log_y = FALSE,
   start_date = NULL,
   end_date = NULL,
-  x_yoy = FALSE,
-  y_yoy = FALSE,
+  x_change = NULL,
+  y_change = NULL,
   date_ranges = NULL
 )
 }
@@ -50,9 +50,9 @@ create_scatter_plot(
 
 \item{end_date}{The ending date for the plot (optional).}
 
-\item{x_yoy}{A boolean indicating whether to calculate year-over-year change for the x variable.}
+\item{x_change}{A string indicating whether to calculate a % change for the x variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.}
 
-\item{y_yoy}{A boolean indicating whether to calculate year-over-year change for the y variable.}
+\item{y_change}{A string indicating whether to calculate a % change for the y variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.}
 
 \item{date_ranges}{A list of date ranges to highlight on the plot.}
 }

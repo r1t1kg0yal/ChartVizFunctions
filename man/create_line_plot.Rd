@@ -13,7 +13,7 @@ create_line_plot(
   x_axis_title,
   y_axis_title,
   title,
-  plot_type,
+  plot_change = NULL,
   y_axis_breaks = NULL,
   include_smooth = TRUE,
   y_axis_lower_bound = NULL,
@@ -37,11 +37,11 @@ create_line_plot(
 
 \item{title}{Title of the plot.}
 
-\item{plot_type}{Type of the plot ('level' or 'yoy' for year-over-year).}
+\item{plot_change}{Type of the plot transformation ('mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or NULL for no change).}
 
 \item{y_axis_breaks}{Break points for the y-axis (optional).}
 
-\item{include_smooth}{A boolean indicating whether to include a Loess smoothed line.}
+\item{include_smooth}{A boolean indicating whether to include a Loess smoothed line. Only applies when plot_change is NULL.}
 
 \item{y_axis_lower_bound}{Lower bound for the y-axis (optional).}
 
@@ -51,15 +51,15 @@ create_line_plot(
 A ggplot object representing the line plot.
 }
 \description{
-This function generates a line plot for a given variable over time, with options for different types of plots and additional smoothing.
+This function generates a line plot for a given variable over time, with options for different types of transformations and additional smoothing.
 }
 \examples{
 create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
                  end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "BEA Corporate Profits Less Fed Profits",
-                 plot_type = "level", y_axis_breaks = NULL,
+                 plot_change = NULL, y_axis_breaks = NULL,
                  include_smooth = FALSE)
 create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
                  end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY \% Change", title = "BEA Corporate Profits Less Fed Profits",
-                 plot_type = "yoy", y_axis_breaks = 2,
+                 plot_change = "yoy", y_axis_breaks = 2,
                  include_smooth = TRUE)
 }
