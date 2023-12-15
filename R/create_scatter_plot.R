@@ -143,15 +143,18 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   }
 
   apply_change <- function(data, var, change_type) {
-    lag_value <- determine_lag(data, change_type)
-    if (lag_value > 0) {
-      data[[var]] <- (data[[var]] / lag(data[[var]], n = lag_value) - 1) * 100
+    if (!is.null(change_type) && change_type %in% valid_changes) {
+      lag_value <- determine_lag(data, change_type)
+      if (lag_value > 0 && !is.null(data[[var]])) {
+        data[[var]] <- (data[[var]] / lag(data[[var]], n = lag_value) - 1) * 100
+      }
     }
     return(data)
   }
 
   data <- apply_change(data, x_var, x_change)
   data <- apply_change(data, y_var, y_change)
+
 
   # Filter out rows with NA in x_var or y_var
   data <- data %>% filter(!is.na(data[[x_var]]) & !is.na(data[[y_var]]))

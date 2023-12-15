@@ -50,8 +50,8 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
   date_diffs <- diff(data$date)
   median_diff <- median(date_diffs)
 
-  # Set the lag based on the frequency
-  determine_lag <- function(change_type) {
+  # Define the determine_lag function
+  determine_lag <- function(change_type, median_diff) {
     if (change_type == "mom") {
       return(ifelse(median_diff <= 7, 4, 1)) # Weekly data uses 4 weeks lag, else monthly
     } else if (change_type == "qoq") {
@@ -63,11 +63,16 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
     }
   }
 
-  # Apply the transformation
-  lag_days <- determine_lag(plot_change)
-  if (lag_days > 0) {
-    data <- data %>%
-      mutate(change_variable = (get(var_name, data) / lag(get(var_name, data), lag_days) - 1) * 100)
+  # Apply the transformation based on plot_change
+  if (!is.null(plot_change)) {
+    lag_days <- determine_lag(plot_change, median_diff)
+    if (lag_days > 0) {
+      data <- data %>%
+        mutate(change_variable = (get(var_name, data) / lag(get(var_name, data), lag_days) - 1) * 100)
+    } else {
+      data <- data %>%
+        mutate(change_variable = get(var_name, data))
+    }
   } else {
     data <- data %>%
       mutate(change_variable = get(var_name, data))
