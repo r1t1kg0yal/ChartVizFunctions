@@ -11,6 +11,7 @@ create_scatter_plot(
   x_label,
   y_label,
   title = NULL,
+  subtitle = NULL,
   highlight_dates = NULL,
   highlight_latest = FALSE,
   include_lof = NULL,
@@ -18,6 +19,7 @@ create_scatter_plot(
   log_y = FALSE,
   start_date = NULL,
   end_date = NULL,
+  y_lag = NULL,
   x_change = NULL,
   y_change = NULL,
   date_ranges = NULL
@@ -36,6 +38,8 @@ create_scatter_plot(
 
 \item{title}{Optional title for the plot.}
 
+\item{subtitle}{Optional subtitle for the plot. Overrides the automatic subtitle generation functionality.}
+
 \item{highlight_dates}{Dates to highlight on the plot.}
 
 \item{highlight_latest}{A boolean indicating whether to highlight the latest data point.}
@@ -49,6 +53,8 @@ create_scatter_plot(
 \item{start_date}{The starting date for the plot (optional).}
 
 \item{end_date}{The ending date for the plot (optional).}
+
+\item{y_lag}{The number of rows to shift the y variable back or forward. If positive, the y-column is shifted up (behind) by y_lag.}
 
 \item{x_change}{A string indicating whether to calculate a % change for the x variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.}
 

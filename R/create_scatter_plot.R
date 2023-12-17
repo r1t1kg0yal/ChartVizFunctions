@@ -8,6 +8,7 @@
 #' @param x_label Label for the x-axis.
 #' @param y_label Label for the y-axis.
 #' @param title Optional title for the plot.
+#' @param subtitle Optional subtitle for the plot. Overrides the automatic subtitle generation functionality.
 #' @param highlight_dates Dates to highlight on the plot.
 #' @param highlight_latest A boolean indicating whether to highlight the latest data point.
 #' @param include_lof Method for line of best fit ('lm', 'loess', or NULL).
@@ -15,6 +16,7 @@
 #' @param log_y A boolean indicating whether to apply a logarithmic transformation to the y-axis.
 #' @param start_date The starting date for the plot (optional).
 #' @param end_date The ending date for the plot (optional).
+#' @param y_lag The number of rows to shift the y variable back or forward. If positive, the y-column is shifted up (behind) by y_lag.
 #' @param x_change A string indicating whether to calculate a % change for the x variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
 #' @param y_change A string indicating whether to calculate a % change for the y variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
 #' @param date_ranges A list of date ranges to highlight on the plot.
@@ -38,10 +40,10 @@
 #'                     include_lof = "lm",
 #'                     log_x = TRUE, log_y = TRUE)
 
-create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NULL,
+create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NULL, subtitle = NULL,
                                 highlight_dates = NULL, highlight_latest = FALSE,
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,
-                                start_date = NULL, end_date = NULL,
+                                start_date = NULL, end_date = NULL, y_lag = NULL,
                                 x_change = NULL, y_change = NULL, date_ranges = NULL) {
 
   library(ggplot2)
@@ -57,12 +59,19 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
     stop("Invalid method for include_lof: must be 'lm', 'loess', or NULL")
   }
 
+  # Check if y_lag is not null and enforce constraints
+  if (!is.null(y_lag)) {
+    if (!is.null(highlight_dates) || (highlight_latest) || !is.null(date_ranges)) {
+      stop("If y_lag is not NULL, then highlight_dates and date_ranges must be NULL and highlight_latest must be FALSE.")
+    }
+  }
+
   if(is.Date(data[[x_var]]) & log_x == TRUE) stop("log_x must be FALSE if x_var is a date")
 
   # Ensure data is ordered by date
   data <- data %>% arrange(date)
 
-  # Store the original highlight dates for legend labels
+  # Store original highlight dates for legend labels
   original_highlight_dates <- highlight_dates
 
   # Check highlight_dates and replace with closest dates if not found
@@ -106,16 +115,6 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
     data <- data %>% filter(date <= end_date)
   }
 
-  # Apply log transformation if requested and if the variable is numeric
-  if (log_x && !is.Date(data[[x_var]])) {
-    data[[x_var]] <- log(data[[x_var]], base = exp(1))
-    x_label <- paste("Log of", x_label)
-  }
-  if (log_y && !is.Date(data[[y_var]])) {
-    data[[y_var]] <- log(data[[y_var]], base = exp(1))
-    y_label <- paste("Log of", y_label)
-  }
-
   # Check and apply x_change and y_change transformations
   valid_changes <- c("mom", "qoq", "yoy", NULL)
 
@@ -155,6 +154,14 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   data <- apply_change(data, x_var, x_change)
   data <- apply_change(data, y_var, y_change)
 
+  # Apply lag/lead to the y-variable if y_lag is specified
+  if (!is.null(y_lag)) {
+    if (y_lag > 0) {
+      data[[y_var]] <- lead(data[[y_var]], n = y_lag)
+    } else if (y_lag < 0) {
+      data[[y_var]] <- lag(data[[y_var]], n = -y_lag)
+    }
+  }
 
   # Filter out rows with NA in x_var or y_var
   data <- data %>% filter(!is.na(data[[x_var]]) & !is.na(data[[y_var]]))
@@ -216,14 +223,16 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   }
 
   # Create the subtitle based on the provided constraints
-  subtitle <- if (!is.null(start_date) && !is.null(end_date)) {
-    paste(format(start_date, format = "%Y-%m-%d"), "to", format(end_date, format = "%Y-%m-%d"))
-  } else if (!is.null(start_date)) {
-    paste("Since", format(start_date, format = "%Y-%m-%d"))
-  } else if (!is.null(end_date)) {
-    paste("Until", format(end_date, format = "%Y-%m-%d"))
-  } else {
-    NULL  # No subtitle if no date constraints are provided
+  if(is.null(subtitle)){
+    subtitle <- if (!is.null(start_date) && !is.null(end_date)) {
+      paste(format(start_date, format = "%Y-%m-%d"), "to", format(end_date, format = "%Y-%m-%d"))
+    } else if (!is.null(start_date)) {
+      paste("Since", format(start_date, format = "%Y-%m-%d"))
+    } else if (!is.null(end_date)) {
+      paste("Until", format(end_date, format = "%Y-%m-%d"))
+    } else {
+      NULL  # No subtitle if no date constraints are provided
+    }
   }
 
   # Auto-generate title if not provided
