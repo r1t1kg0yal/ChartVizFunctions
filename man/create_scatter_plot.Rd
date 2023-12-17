@@ -38,7 +38,7 @@ create_scatter_plot(
 
 \item{title}{Optional title for the plot.}
 
-\item{subtitle}{Optional subtitle for the plot. Overrides the automatic subtitle generation functionality.}
+\item{subtitle}{Optional subtitle for the plot. Overrides any automatic subtitle generation.}
 
 \item{highlight_dates}{Dates to highlight on the plot.}
 

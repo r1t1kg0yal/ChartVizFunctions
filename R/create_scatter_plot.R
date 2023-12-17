@@ -8,7 +8,7 @@
 #' @param x_label Label for the x-axis.
 #' @param y_label Label for the y-axis.
 #' @param title Optional title for the plot.
-#' @param subtitle Optional subtitle for the plot. Overrides the automatic subtitle generation functionality.
+#' @param subtitle Optional subtitle for the plot. Overrides any automatic subtitle generation.
 #' @param highlight_dates Dates to highlight on the plot.
 #' @param highlight_latest A boolean indicating whether to highlight the latest data point.
 #' @param include_lof Method for line of best fit ('lm', 'loess', or NULL).
