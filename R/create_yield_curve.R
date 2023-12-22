@@ -22,6 +22,17 @@
 #'                                   "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"))
 
 create_yield_curve <- function(data, var_names, maturities, plot_dates, plot_title, x_axis_breaks = 1) {
+
+  # Check if the dataset 'data' exists
+  if (!exists("data")) {
+    stop("Dataset 'data' not found.")
+  }
+
+  # Check if 'data' is a data frame
+  if (!is.data.frame(data)) {
+    stop("The provided 'data' is not a data frame.")
+  }
+
   # Check if the required columns are present in the data
   if (!all(var_names %in% names(data))) {
     stop("Not all variables are present in the data frame.")

@@ -34,6 +34,21 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
                                 frequency, change_space, flip_colors = FALSE, override_subtitle = NULL,
                                 include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL) {
 
+  # Check if the dataset 'data' exists
+  if (!exists("data")) {
+    stop("Dataset 'data' not found.")
+  }
+
+  # Check if 'data' is a data frame
+  if (!is.data.frame(data)) {
+    stop("The provided 'data' is not a data frame.")
+  }
+
+  # Check if the variable 'var_name' is found in 'data'
+  if (!var_name %in% names(data)) {
+    stop(paste("Variable '", var_name, "' not found in the dataset.", sep = ""))
+  }
+
   # Get recession data and merge with existing data
   data <- add_recession_data(data)
 

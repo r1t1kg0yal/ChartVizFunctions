@@ -10,6 +10,7 @@ library(scales)
 library(zoo)
 library(stringr)
 library(devtools)
+library(roxygen2)
 
 monthly_data <- read.csv("data/monthly_data.csv")
 monthly_data$date <- as.Date(monthly_data$date)
@@ -27,9 +28,6 @@ create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_
                        x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 1,
                        y_axis_breaks = 1000,
                        var_changes = c("yoy", "yoy"), include_smooth = FALSE)
-
-
-
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",

@@ -37,6 +37,21 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
   library(ggplot2)
   library(lubridate)
 
+  # Check if the dataset 'data' exists
+  if (!exists("data")) {
+    stop("Dataset 'data' not found.")
+  }
+
+  # Check if 'data' is a data frame
+  if (!is.data.frame(data)) {
+    stop("The provided 'data' is not a data frame.")
+  }
+
+  # Check if the variable in 'var_name' is found in 'data'
+  if (!var_name %in% names(data)) {
+    stop(paste("Variable '", var_name, "' not found in the dataset.", sep = ""))
+  }
+
   # Get recession data and merge with existing data
   data <- add_recession_data(data)
 
@@ -51,14 +66,40 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
   median_diff <- median(date_diffs)
 
   # Define the determine_lag function
+  # Determine the lag for each change type
   determine_lag <- function(change_type) {
     if (change_type == "mom") {
-      return(ifelse(median_diff <= 7, 4, 1)) # Weekly data uses 4 weeks lag, else monthly
+      if (median_diff <= 1) {
+        return(365)  # Daily data
+      } else if (median_diff <= 7) {
+        return(4)    # Weekly data
+      } else {
+        return(1)    # Monthly data
+      }
     } else if (change_type == "qoq") {
-      return(ifelse(median_diff <= 31, 13, ifelse(median_diff <= 92, 3, 1))) # Weekly, Monthly, Quarterly
+      if (median_diff <= 1) {
+        return(365/3)  # Daily data
+      } else if (median_diff <= 7) {
+        return(13)     # Weekly data
+      } else if (median_diff <= 31) {
+        return(3)      # Monthly data
+      } else if (median_diff <= 92) {
+        return(1)      # Quarterly data
+      }
     } else if (change_type == "yoy") {
-      return(ifelse(median_diff <= 1, 365, ifelse(median_diff <= 7, 52, ifelse(median_diff <= 31, 12, ifelse(median_diff <= 92, 4, 1))))) # Daily, Weekly, Monthly, Quarterly, Annually
+      if (median_diff <= 1) {
+        return(365)    # Daily data
+      } else if (median_diff <= 7) {
+        return(52)     # Weekly data
+      } else if (median_diff <= 31) {
+        return(12)     # Monthly data
+      } else if (median_diff <= 92) {
+        return(4)      # Quarterly data
+      } else {
+        return(1)      # Annual data
+      }
     } else {
+      # For no change or invalid change type, no lag is applied
       return(0)
     }
   }

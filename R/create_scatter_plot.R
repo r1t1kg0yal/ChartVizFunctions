@@ -49,6 +49,26 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   library(ggplot2)
   library(dplyr)
 
+  # Check if the dataset 'data' exists
+  if (!exists("data")) {
+    stop("Dataset 'data' not found.")
+  }
+
+  # Check if 'data' is a data frame
+  if (!is.data.frame(data)) {
+    stop("The provided 'data' is not a data frame.")
+  }
+
+  # Check if the variable 'x_var' is found in 'data'
+  if (!x_var %in% names(data)) {
+    stop(paste("Variable '", x_var, "' not found in the dataset.", sep = ""))
+  }
+
+  # Check if the variable 'y_var' is found in 'data'
+  if (!y_var %in% names(data)) {
+    stop(paste("Variable '", y_var, "' not found in the dataset.", sep = ""))
+  }
+
   # Ensure data is ordered by date if x_var or y_var is a date
   if (is.Date(data[[x_var]]) || is.Date(data[[y_var]])) {
     data <- data %>% arrange(.data[[if_else(is.Date(data[[x_var]]), x_var, y_var)]])
