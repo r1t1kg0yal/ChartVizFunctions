@@ -60,7 +60,7 @@ create_two_axis_line_plot <- function(data, variables, var_labels, start_date, e
     } else if (change_type == "qoq") {
       return(ifelse(median_diff <= 31, 13, ifelse(median_diff <= 92, 3, 1))) # Weekly, Monthly, Quarterly
     } else if (change_type == "yoy") {
-      return(ifelse(median_diff <= 7, 52, ifelse(median_diff <= 31, 12, ifelse(median_diff <= 92, 4, 1)))) # Weekly, Monthly, Quarterly, Annually
+      return(ifelse(median_diff <= 1, 365, ifelse(median_diff <= 7, 52, ifelse(median_diff <= 31, 12, ifelse(median_diff <= 92, 4, 1))))) # Daily, Weekly, Monthly, Quarterly, Annually
     } else {
       return(0)
     }
