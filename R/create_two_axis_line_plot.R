@@ -15,6 +15,7 @@
 #' @param var_2_type Type of transformation for the second variable.
 #'                  Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
 #'                  'mom' for month-over-month, or NULL for no transformation.
+#' @param horizontal_line Defaulted to "left", which adds a horizontal line at the 0-line for the left y axis. Set to "right" to put the horizontal line at the 0-line for the right y axis.
 #' @return A ggplot object representing the two-axis line plot.
 #' @export
 #'
@@ -23,7 +24,8 @@
 #'                           var_labels = c("Fed Funds Rate (%)", "NGDP YoY % Change"), start_date = "2000-01-01",
 #'                           end_date = "2024-01-01", x_axis_breaks = 5, plot_title = "Fed Funds and NGDP",
 #'                           var_1_type = NULL, var_2_type = "yoy")
-create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type = NULL, var_2_type = NULL) {
+create_two_axis_line_plot <- function(data, variables, var_labels, start_date, end_date, plot_title, x_axis_breaks, var_1_type = NULL, var_2_type = NULL,
+                                      horizontal_line = "left") {
 
   # Check if the dataset 'data' exists
   if (!exists("data")) {
@@ -134,11 +136,27 @@ create_two_axis_line_plot <- function(data, variables, var_labels, start_date, e
   range_var2 <- range(data[[variables[2]]], na.rm = TRUE)
   range_var1 <- range(data[[variables[1]]], na.rm = TRUE)
 
-  # Create the plot with recession bars
+  # Create the base plot with recession bars
   p <- ggplot(data, aes(x = date)) +
     geom_rect(data = recession_periods, inherit.aes = FALSE, aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.5) +
+    scale_x_date(breaks = year_breaks_lineplot_x_axis(data$date, x_axis_breaks), labels = date_format("%Y"))
+
+  # Adding horizontal line based on horizontal_line parameter
+  if (horizontal_line == "left") {
+    p <- p + geom_hline(yintercept = 0, linetype = "solid", color = "grey")
+  } else if (horizontal_line == "right") {
+    # Calculate intercept for right y-axis
+    right_y_intercept <- (0 - min(range_var2)) / diff(range_var2) * diff(range_var1) + min(range_var1)
+    p <- p + geom_hline(yintercept = right_y_intercept, linetype = "solid", color = "grey")
+  }
+
+  # Add the line plots
+  p <- p +
     geom_line(aes(y = data[[variables[1]]]), color = "blue") +
-    geom_line(aes(y = (data[[variables[2]]] - min(range_var2)) / diff(range_var2) * diff(range_var1) + min(range_var1)), color = "red") +
+    geom_line(aes(y = (data[[variables[2]]] - min(range_var2)) / diff(range_var2) * diff(range_var1) + min(range_var1)), color = "red")
+
+  # Add additional elements to the plot
+  p <- p +
     scale_y_continuous(
       name = var_labels[1],
       labels = label_comma(),
@@ -146,7 +164,6 @@ create_two_axis_line_plot <- function(data, variables, var_labels, start_date, e
       sec.axis = sec_axis(~ . * diff(range_var2) / diff(range_var1) + min(range_var2) - min(range_var1) * diff(range_var2) / diff(range_var1),
                           name = var_labels[2], labels = label_comma())
     ) +
-    scale_x_date(breaks = year_breaks_lineplot_x_axis(data$date, x_axis_breaks), labels = date_format("%Y")) +
     labs(title = plot_title) +
     theme_minimal() +
     theme(

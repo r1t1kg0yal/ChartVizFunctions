@@ -13,7 +13,8 @@ create_two_axis_line_plot(
   plot_title,
   x_axis_breaks,
   var_1_type = NULL,
-  var_2_type = NULL
+  var_2_type = NULL,
+  horizontal_line = "left"
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
 \item{var_2_type}{Type of transformation for the second variable.
 Acceptable values: 'yoy' for year-over-year, 'qoq' for quarter-over-quarter,
 'mom' for month-over-month, or NULL for no transformation.}
+
+\item{horizontal_line}{Defaulted to "left", which adds a horizontal line at the 0-line for the left y axis. Set to "right" to put the horizontal line at the 0-line for the right y axis.}
 }
 \value{
 A ggplot object representing the two-axis line plot.

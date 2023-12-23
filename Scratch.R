@@ -50,9 +50,9 @@ create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", 
                        include_smooth = FALSE, var_changes = c("yoy", "mom", "yoy"))
 
 create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "cpi"),
-                          var_labels = c("Fed Funds Rate (%)", "CPI"), start_date = "2018-01-01",
+                          var_labels = c("Fed Funds Rate (%)", "CPI"), start_date = "2000-01-01",
                           end_date = "2024-01-01", x_axis_breaks = 1, plot_title = "Fed Funds and YoY CPI",
-                          var_1_type = NULL, var_2_type = "mom")
+                          var_1_type = "yoy", var_2_type = "mom", horizontal_line = "left")
 
 create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_var = "total_housing_starts_nsa", subtitle = "Y Lagged by 2y",
                     x_label = "Under Construction (1000s)", y_label = "Starts (1000s)", start_date = "2000-01-01",
