@@ -71,3 +71,21 @@ create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "l
 
 create_returns_plot(price_data = weekdaily_data, start_date = "2023-01-01", variables = c("SPY", "TLT"),
                     combo_bets = list(combo_bet("SPY", "TLT", 1, -1)), add_risk_parity = TRUE)
+
+cumulative_table_decades <- get_cumulative_table(df = monthly_data,
+                                                 var_names = c("nf_employees", "resi_const_employees_nsa"),
+                                                 interval_short = "decades",
+                                                 interval_manual = NULL)
+
+
+manual_intervals <- list(
+  c(2000, 2005),
+  c(2006, 2010),
+  c(2011, 2015),
+  c(2016, 2020)
+)
+
+cumulative_table_decades <- get_cumulative_table(df = monthly_data,
+                                                 var_names = c("nf_employees", "resi_const_employees_nsa"),
+                                                 interval_short = NULL,
+                                                 interval_manual = manual_intervals)
