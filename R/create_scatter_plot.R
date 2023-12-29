@@ -233,7 +233,7 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   # Base plot with non-highlighted points in grey and no legend for date ranges
   p <- ggplot(data, aes(x = .data[[x_var]], y = .data[[y_var]])) +
     geom_point(aes(color = highlight_color), size = 0.1, show.legend = FALSE) +
-    geom_point(data = data[!is.na(data$highlight_color), ], aes(color = highlight_color), size = 2, shape = 16) +
+    geom_point(data = data[!is.na(data$highlight_color), ], aes(color = highlight_color), size = 1, shape = 16) +
     scale_color_manual(values = highlight_colors, name = "Highlighted Dates") +
     theme(legend.position = "right")
 

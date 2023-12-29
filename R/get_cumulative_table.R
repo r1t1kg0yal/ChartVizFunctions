@@ -27,6 +27,7 @@
 #' @import lubridate
 #' @import tibble
 #' @export
+
 get_cumulative_table <- function(df, var_names, interval_short = NULL, interval_manual = NULL) {
   if (!is.null(interval_short) && !is.null(interval_manual)) {
     stop("Only one of 'interval_short' or 'interval_manual' should be provided.")
@@ -54,9 +55,17 @@ get_cumulative_table <- function(df, var_names, interval_short = NULL, interval_
   # Calculate cumulative percentage change for a given interval and column
   calc_percentage_change <- function(data, start, end, column) {
     subset_data <- data %>% filter(date >= as.Date(paste0(start, "-01-01")) & date <= as.Date(paste0(end, "-12-31")))
-    if (nrow(subset_data) < 2) return(NA_real_) # Return NA if less than 2 data points
+    print(paste("Processing interval:", start, "-", end)) # Diagnostic message
+    if (nrow(subset_data) < 2) {
+      print(paste("Insufficient data points for", column, "in interval", start, "-", end)) # Diagnostic message
+      return(NA_real_)
+    }
     start_value <- subset_data[[column]][1]
     end_value <- subset_data[[column]][nrow(subset_data)]
+    if(is.na(start_value) || is.na(end_value)) {
+      print(paste("NA detected for", column, "in interval", start, "-", end)) # Diagnostic message
+      return(NA_real_)
+    }
     return((end_value - start_value) / start_value * 100)
   }
 
