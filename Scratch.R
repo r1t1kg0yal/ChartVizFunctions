@@ -15,6 +15,9 @@ library(roxygen2)
 monthly_data <- read.csv("data/monthly_data.csv")
 monthly_data$date <- as.Date(monthly_data$date)
 
+weekly_data <- read.csv("data/weekly_data.csv")
+weekly_data$date <- as.Date(weekly_data$date)
+
 weekdaily_data <- read.csv("data/weekdaily_data.csv")
 weekdaily_data$date <- as.Date(weekdaily_data$date)
 
@@ -33,6 +36,11 @@ create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_
                     end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
                     frequency = "monthly", change_space = "yoy", num_decimals = 1,
                     include_cell_numbers = TRUE, scaling_power = NULL, flip_colors = TRUE)
+
+create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 2000,
+                    end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
+                    frequency = "weekly", change_space = "level", num_decimals = 1,
+                    include_cell_numbers = TRUE, scaling_power = 5, flip_colors = FALSE)
 
 create_line_plot(data = monthly_data, var_name = "employee_comp", start_year = 2000, end_year = 2023, x_axis_breaks = 5,
                  x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Employee Comp",
