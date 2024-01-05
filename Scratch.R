@@ -93,3 +93,27 @@ cumulative_table_decades <- get_cumulative_table(df = monthly_data,
                                                  var_names = c("nf_employees", "resi_const_employees_nsa"),
                                                  interval_short = NULL,
                                                  interval_manual = manual_intervals)
+
+
+create_returns_table(price_data = weekdaily_data, start_date = "2023-01-01", variables = c("SPY", "TLT"),
+                     combo_bets = list(combo_bet("SPY", "TLT", "IWM", 1, -1, -1)), add_risk_parity = FALSE)
+
+create_returns_plot(price_data = weekdaily_data, start_date = "2003-01-01", variables = c("SPY", "TLT"),
+                     combo_bets = list(combo_bet("TLT", "SPY", "IWM", -1, -.5, 1)), add_risk_parity = FALSE)
+
+create_multi_scatter_plot(
+  data = monthly_data,
+  var_name_list = c("initial_claims_nsa", "initial_claims_sa"),
+  var_label_list = c("Not Seasonally Adjusted", "Seasonally Adjusted"),
+  start_year = 1980,
+  end_year = 2025,
+  x_axis_breaks = 5,
+  x_axis_title = "",
+  y_axis_title = "Number of Claims",
+  title = "Initial Claims",
+  plot_type = "level",
+  y_axis_breaks = NULL,
+  include_smooth = FALSE,
+  y_axis_lower_bound = 0,
+  y_axis_upper_bound = 2000000
+)

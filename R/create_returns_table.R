@@ -64,17 +64,26 @@ create_returns_table <- function(price_data, start_date, end_date = Sys.Date(), 
 
   # Calculate returns for combo bets
   for (bet in combo_bets) {
-    var_1 <- bet$var_1
-    var_2 <- bet$var_2
-    size_1 <- bet$size_1
-    size_2 <- bet$size_2
+    combo_return <- numeric(nrow(price_data))
+    combo_name_parts <- c()
 
-    # Formatting the combo bet column name as "C*100/D*100 A/B"
-    combo_name <- paste0((size_1 * 100), "/", (size_2 * 100), " ", var_1, "/", var_2)
+    for (bet_component in bet) {
+      var <- bet_component$var
+      size <- bet_component$size
 
-    var_1_return <- (price_data[[var_1]] / price_data[price_data$date == start_date, var_1] - 1) * 100
-    var_2_return <- (price_data[[var_2]] / price_data[price_data$date == start_date, var_2] - 1) * 100
-    returns_table[[combo_name]] <- var_1_return * size_1 + var_2_return * size_2
+      # Append variable name and size to the combo name
+      combo_name_parts <- c(combo_name_parts, paste0((size * 100), "% ", var))
+
+      # Calculate and accumulate weighted return for each variable in the combo
+      var_return <- (price_data[[var]] / price_data[price_data$date == start_date, var] - 1) * 100
+      combo_return <- combo_return + var_return * size
+    }
+
+    # Combine the parts of the combo name
+    combo_name <- paste(combo_name_parts, collapse = " / ")
+
+    # Add combo return to the returns table
+    returns_table[[combo_name]] <- combo_return
   }
 
   # Add Risk Parity column if requested

@@ -112,16 +112,34 @@ create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start
       legend.key.height = unit(1, "lines"),  # Adjust the height of the legend keys if needed
       legend.text = element_text(margin = margin(t = 1, b = 1)),  # Set top and bottom margin, adjust line height
       legend.spacing.y = unit(2, "lines"),  # Adjust spacing between legend keys
-      legend.position = "right"  # Adjust if needed to place the legend on the right
+      legend.position = "bottom",  # Adjust if needed to place the legend on the right
+      legend.margin = margin(t = -10, b = 0, l = 0, r = 0) # Reduce space around the legend
     ) +
     ggtitle(title) +
     scale_color_manual(values = custom_colors) +
     guides(color = guide_legend(title = NULL))
 
-  # Combine conditional Y-axis scale and boundaries into a single scale_y_continuous call
-  p <- p + scale_y_continuous(
-    labels = scales::number_format(big.mark = ",")
-  )
+  # Modify the scale_y_continuous call
+  if (!is.null(y_axis_breaks)) {
+    p <- p + scale_y_continuous(
+      breaks = function(limits) {
+        seq(from = floor(limits[1] / y_axis_breaks) * y_axis_breaks,
+            to = ceiling(limits[2] / y_axis_breaks) * y_axis_breaks,
+            by = y_axis_breaks)
+      },
+      labels = scales::number_format(big.mark = ","),
+      limits = if (!is.null(y_axis_lower_bound) || !is.null(y_axis_upper_bound)) {
+        c(y_axis_lower_bound, y_axis_upper_bound)
+      }
+    )
+  } else {
+    p <- p + scale_y_continuous(
+      labels = scales::number_format(big.mark = ","),
+      limits = if (!is.null(y_axis_lower_bound) || !is.null(y_axis_upper_bound)) {
+        c(y_axis_lower_bound, y_axis_upper_bound)
+      }
+    )
+  }
 
   if(plot_type == "yoy") {
     p <- p + geom_hline(yintercept = 0, size = .2, color = "black") # Horizontal line at 0%
