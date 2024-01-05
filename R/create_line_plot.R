@@ -67,7 +67,8 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
 
   # Define the determine_lag function
   # Determine the lag for each change type
-  determine_lag <- function(change_type) {
+  # Define the determine_lag function with median_diff as an additional parameter
+  determine_lag <- function(change_type, median_diff) {
     if (change_type == "mom") {
       if (median_diff <= 1) {
         return(365)  # Daily data

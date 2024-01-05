@@ -125,3 +125,9 @@ create_multi_scatter_plot(
   y_axis_lower_bound = 0,
   y_axis_upper_bound = 2000000
 )
+
+create_line_plot(data = monthly_data, var_name = "ahe",
+                 start_year = 1980, end_year = 2023, x_axis_breaks = 1, x_axis_title = "",
+                 y_axis_title = "1000s of Persons", title = "Monthly Non-Farm Payrolls", plot_change = "yoy",
+                 y_axis_breaks = NULL,
+                 include_smooth = FALSE)
