@@ -114,8 +114,8 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
     label_data <- heatmap_data_long$scaled_level_variable
 
     # Color scheme
-    low_color <- if(flip_colors) "blue3" else "darkred"
-    high_color <- if(flip_colors) "darkred" else "blue3"
+    low_color <- if(flip_colors) muted("blue") else muted("red")
+    high_color <- if(flip_colors) muted("red") else ("blue")
 
     # Create heatmap plot
     heatmap_plot <- ggplot(heatmap_data_long, aes(x = year, y = period, fill = capped_level_variable)) +
@@ -178,8 +178,8 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
     label_data <- heatmap_data_long$scaled_level_variable
 
     # Color scheme
-    low_color <- if(flip_colors) "blue3" else "darkred"
-    high_color <- if(flip_colors) "darkred" else "blue3"
+    low_color <- if(flip_colors) muted("blue") else muted("red")
+    high_color <- if(flip_colors) muted("red") else ("blue")
 
     # Create heatmap plot
     heatmap_plot <- ggplot(heatmap_data_long, aes(x = year, y = period, fill = capped_level_variable)) +
