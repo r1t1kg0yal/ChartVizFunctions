@@ -23,6 +23,7 @@
 #' @param lof_color Color for the line of best fit. This parameter allows you to specify the color of the line of best fit (LOF) on the scatter plot. The default color is "black". Accepts any color value recognized by ggplot2, such as color names ("red", "blue", etc.) or hexadecimal color codes.
 #' @param dot_size Size of the normal (non-highlighted) dots on the scatter plot. This parameter controls the size of the standard points in the plot. The default size is 1. You can specify any positive numeric value to increase or decrease the size of these points.
 #' @param highlight_size Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.
+#' @param lof_span Span of the lof
 #'
 #' @return A ggplot object representing the scatter plot.
 #' @export
@@ -48,7 +49,7 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,
                                 start_date = NULL, end_date = NULL, y_lag = NULL,
                                 x_change = NULL, y_change = NULL, date_ranges = NULL,
-                                lof_color = "black", dot_size = 1, highlight_size = 3) {
+                                lof_color = "black", dot_size = 1, highlight_size = 3, lof_span = 0.1) {
 
   library(ggplot2)
   library(dplyr)
@@ -243,7 +244,7 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
 
   # Add line of best fit if requested
   if (!is.null(include_lof)) {
-    p <- p + geom_smooth(method = include_lof, se = FALSE, color = lof_color, size = 0.5, span = 0.1)
+    p <- p + geom_smooth(method = include_lof, se = FALSE, color = lof_color, size = 0.5, span = lof_span)
   }
 
   # Create the subtitle based on the provided constraints

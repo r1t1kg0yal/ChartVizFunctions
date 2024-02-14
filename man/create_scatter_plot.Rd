@@ -25,7 +25,8 @@ create_scatter_plot(
   date_ranges = NULL,
   lof_color = "black",
   dot_size = 1,
-  highlight_size = 3
+  highlight_size = 3,
+  lof_span = 0.1
 )
 }
 \arguments{
@@ -70,6 +71,8 @@ create_scatter_plot(
 \item{dot_size}{Size of the normal (non-highlighted) dots on the scatter plot. This parameter controls the size of the standard points in the plot. The default size is 1. You can specify any positive numeric value to increase or decrease the size of these points.}
 
 \item{highlight_size}{Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.}
+
+\item{lof_span}{Span of the lof}
 }
 \value{
 A ggplot object representing the scatter plot.
