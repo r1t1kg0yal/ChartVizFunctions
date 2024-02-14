@@ -10,11 +10,15 @@
 #' @param title Title of the heatmap.
 #' @param frequency The frequency of data points ('weekly' or 'monthly').
 #' @param change_space Determines the type of data transformation ('level' or 'yoy' for year-over-year).
-#' @param flip_colors A boolean indicating whether to flip the default color scheme.
+#' @param flip_colors A boolean indicating whether to flip the color scheme.
 #' @param override_subtitle An optional subtitle for the heatmap, overriding the default.
 #' @param include_cell_numbers A boolean indicating whether to include cell numbers in the heatmap.
 #' @param scaling_power The power to which the cell numbers are scaled (relevant only if include_cell_numbers is TRUE).
 #' @param num_decimals The number of decimal places to include in cell number labels (if applicable).
+#' @param color_1 The primary color used in the heatmap. This can be any valid color name or hexadecimal color code. The default is "indianred". This color is used for the low end of the gradient scale unless `flip_colors` is TRUE.
+#' @param color_2 The secondary color used in the heatmap. This can be any valid color name or hexadecimal color code. The default is "dodgerblue". This color is used for the high end of the gradient scale unless `flip_colors` is TRUE.
+#' @param mute_color_1 A boolean indicating whether to mute `color_1`. If TRUE, `color_1` will be muted, which typically makes it less bright and more pastel-like. Default is FALSE.
+#' @param mute_color_2 A boolean indicating whether to mute `color_2`. If TRUE, `color_2` will be muted, which typically makes it less bright and more pastel-like. Default is TRUE.
 #'
 #' @return A ggplot object representing the heatmap.
 #' @export
@@ -32,7 +36,9 @@
 
 create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_breaks, title,
                                 frequency, change_space, flip_colors = FALSE, override_subtitle = NULL,
-                                include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL) {
+                                include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL,
+                                color_1 = "indianred", color_2 = "dodgerblue",
+                                mute_color_1 = FALSE, mute_color_2 = TRUE) {
 
   # Check if the dataset 'data' exists
   if (!exists("data")) {
@@ -88,6 +94,26 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
   # Process decimals
   label_format <- if(!is.null(num_decimals)) paste0("%.", num_decimals, "f") else "%.0f"
 
+  # Function to optionally mute colors
+  apply_mute <- function(color, mute) {
+    if(mute) {
+      return(scales::muted(color))
+    } else {
+      return(color)
+    }
+  }
+
+  # Apply mute to colors
+  low_color <- apply_mute(color_1, mute_color_1)
+  high_color <- apply_mute(color_2, mute_color_2)
+
+  if(flip_colors)
+  {
+    high_color_temp <- low_color
+    low_color <- high_color
+    high_color <- high_color_temp
+  }
+
   if(change_space == "level") {
     # Reshape data
     heatmap_data_reshaped <- heatmap_data %>%
@@ -112,10 +138,6 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
     scale_factor <- ifelse(include_cell_numbers, 10^scaling_power, 1)
     heatmap_data_long$scaled_level_variable <- heatmap_data_long$level_variable / scale_factor
     label_data <- heatmap_data_long$scaled_level_variable
-
-    # Color scheme
-    low_color <- if(flip_colors) muted("dodgerblue") else ("indianred")
-    high_color <- if(flip_colors) ("indianred") else muted("dodgerblue")
 
     # Create heatmap plot
     heatmap_plot <- ggplot(heatmap_data_long, aes(x = year, y = period, fill = capped_level_variable)) +
@@ -179,10 +201,6 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
     scale_factor <- 1
     heatmap_data_long$scaled_level_variable <- heatmap_data_long$yoy_change / scale_factor
     label_data <- heatmap_data_long$scaled_level_variable
-
-    # Color scheme
-    low_color <- if(flip_colors) muted("dodgerblue") else ("indianred")
-    high_color <- if(flip_colors) ("indianred") else muted("dodgerblue")
 
     # Create heatmap plot
     heatmap_plot <- ggplot(heatmap_data_long, aes(x = year, y = period, fill = capped_level_variable)) +

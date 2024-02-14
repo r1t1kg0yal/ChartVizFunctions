@@ -17,7 +17,11 @@ create_heatmap_plot(
   override_subtitle = NULL,
   include_cell_numbers = FALSE,
   scaling_power = NULL,
-  num_decimals = NULL
+  num_decimals = NULL,
+  color_1 = "indianred",
+  color_2 = "dodgerblue",
+  mute_color_1 = FALSE,
+  mute_color_2 = TRUE
 )
 }
 \arguments{
@@ -37,7 +41,7 @@ create_heatmap_plot(
 
 \item{change_space}{Determines the type of data transformation ('level' or 'yoy' for year-over-year).}
 
-\item{flip_colors}{A boolean indicating whether to flip the default color scheme.}
+\item{flip_colors}{A boolean indicating whether to flip the color scheme.}
 
 \item{override_subtitle}{An optional subtitle for the heatmap, overriding the default.}
 
@@ -46,6 +50,14 @@ create_heatmap_plot(
 \item{scaling_power}{The power to which the cell numbers are scaled (relevant only if include_cell_numbers is TRUE).}
 
 \item{num_decimals}{The number of decimal places to include in cell number labels (if applicable).}
+
+\item{color_1}{The primary color used in the heatmap. This can be any valid color name or hexadecimal color code. The default is "indianred". This color is used for the low end of the gradient scale unless `flip_colors` is TRUE.}
+
+\item{color_2}{The secondary color used in the heatmap. This can be any valid color name or hexadecimal color code. The default is "dodgerblue". This color is used for the high end of the gradient scale unless `flip_colors` is TRUE.}
+
+\item{mute_color_1}{A boolean indicating whether to mute `color_1`. If TRUE, `color_1` will be muted, which typically makes it less bright and more pastel-like. Default is FALSE.}
+
+\item{mute_color_2}{A boolean indicating whether to mute `color_2`. If TRUE, `color_2` will be muted, which typically makes it less bright and more pastel-like. Default is TRUE.}
 }
 \value{
 A ggplot object representing the heatmap.

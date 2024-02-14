@@ -34,8 +34,9 @@ create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
-                    frequency = "monthly", change_space = "yoy", num_decimals = 1,
-                    include_cell_numbers = TRUE, scaling_power = NULL, flip_colors = TRUE)
+                    frequency = "monthly", change_space = "level", num_decimals = 1,
+                    include_cell_numbers = TRUE, scaling_power = 6, flip_colors = TRUE,
+                    color_2 = "green", mute_color_2 = TRUE)
 
 create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
