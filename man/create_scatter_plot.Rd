@@ -22,7 +22,10 @@ create_scatter_plot(
   y_lag = NULL,
   x_change = NULL,
   y_change = NULL,
-  date_ranges = NULL
+  date_ranges = NULL,
+  lof_color = "black",
+  dot_size = 1,
+  highlight_size = 3
 )
 }
 \arguments{
@@ -61,6 +64,12 @@ create_scatter_plot(
 \item{y_change}{A string indicating whether to calculate a % change for the y variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.}
 
 \item{date_ranges}{A list of date ranges to highlight on the plot.}
+
+\item{lof_color}{Color for the line of best fit. This parameter allows you to specify the color of the line of best fit (LOF) on the scatter plot. The default color is "black". Accepts any color value recognized by ggplot2, such as color names ("red", "blue", etc.) or hexadecimal color codes.}
+
+\item{dot_size}{Size of the normal (non-highlighted) dots on the scatter plot. This parameter controls the size of the standard points in the plot. The default size is 1. You can specify any positive numeric value to increase or decrease the size of these points.}
+
+\item{highlight_size}{Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.}
 }
 \value{
 A ggplot object representing the scatter plot.

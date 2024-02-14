@@ -33,7 +33,7 @@ create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_
                        var_changes = c("yoy", "yoy"), include_smooth = FALSE)
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
-                    end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
+                    end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
                     frequency = "monthly", change_space = "yoy", num_decimals = 1,
                     include_cell_numbers = TRUE, scaling_power = NULL, flip_colors = TRUE)
 
@@ -64,9 +64,9 @@ create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "
 
 create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_var = "total_housing_starts_nsa", subtitle = "Y Lagged by 2y",
                     x_label = "Under Construction (1000s)", y_label = "Starts (1000s)", start_date = "2000-01-01",
-                    title = "Housings Starts vs Under Construction",
-                    y_lag = -24,
-                    include_lof = NULL, x_change = "yoy",
+                    title = "Housings Starts vs Under Construction", highlight_dates = c("2022-01-01"),
+                    y_lag = NULL, lof_color = "red", dot_size = 1, highlight_size = 3,
+                    include_lof = "lm", x_change = "yoy",
                     log_x = FALSE, log_y = FALSE)
 
 create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "loans_ex_ppp_loans", start_date = "2000-01-01",

@@ -124,12 +124,15 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
                            midpoint = median_value, name = "Capped Level", na.value = "white",
                            labels = scales::number_format(big.mark = ",")) +
       theme_minimal(base_size = 10) +
-      theme(axis.text.x = element_text(angle = 0, vjust = 0.5), axis.title.x = element_blank(),
-            axis.title.y = element_blank(), legend.position = "right",
-            panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, margin = margin(b = 5, t = 0, unit = "pt")),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            legend.position = "right",
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
             panel.background = element_rect(fill = "white", colour = "white")) +
       scale_x_continuous(breaks = heatmap_breaks_x_axis(heatmap_data_long$year, x_axis_breaks),
-                         labels = two_digit_year) +
+                         labels = four_digit_year) +
       labs(fill = "Level Variable", title = title)
 
     # Adjust y-axis breaks for weekly data
@@ -188,12 +191,15 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
                            midpoint = median_value, name = "Capped \nYoY % Change", na.value = "white",
                            labels = scales::number_format(big.mark = ",")) +
       theme_minimal(base_size = 10) +
-      theme(axis.text.x = element_text(angle = 0, vjust = 0.5), axis.title.x = element_blank(),
-            axis.title.y = element_blank(), legend.position = "right",
-            panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, margin = margin(b = 5, t = 0, unit = "pt")),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            legend.position = "right",
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
             panel.background = element_rect(fill = "white", colour = "white")) +
       scale_x_continuous(breaks = heatmap_breaks_x_axis(heatmap_data_long$year, x_axis_breaks),
-                         labels = two_digit_year) +
+                         labels = four_digit_year) +
       labs(fill = "Level Variable", title = title)
 
     # Adjust y-axis breaks for weekly data

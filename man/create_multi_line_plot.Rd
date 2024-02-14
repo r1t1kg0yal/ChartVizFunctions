@@ -17,6 +17,7 @@ create_multi_line_plot(
   var_changes = NULL,
   y_axis_breaks = NULL,
   include_smooth = FALSE,
+  subtitle = NULL,
   y_axis_lower_bound = NULL,
   y_axis_upper_bound = NULL
 )
@@ -45,6 +46,8 @@ create_multi_line_plot(
 \item{y_axis_breaks}{Break points for the y-axis (optional).}
 
 \item{include_smooth}{A boolean indicating whether to include a Loess smoothed line. Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).}
+
+\item{subtitle}{Subtitle for the plot.}
 
 \item{y_axis_lower_bound}{Lower bound for the y-axis (optional).}
 

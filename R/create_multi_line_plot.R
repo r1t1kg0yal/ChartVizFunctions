@@ -11,6 +11,7 @@
 #' @param x_axis_title Title for the x-axis.
 #' @param y_axis_title Title for the y-axis.
 #' @param title Title of the plot.
+#' @param subtitle Subtitle for the plot.
 #' @param var_changes A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or NULL for no change. The list must be the same length as 'var_name_list'.
 #' @param y_axis_breaks Break points for the y-axis (optional).
 #' @param include_smooth A boolean indicating whether to include a Loess smoothed line. Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).
@@ -32,7 +33,7 @@
 
 create_multi_line_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                    x_axis_breaks, x_axis_title, y_axis_title, title, var_changes = NULL,
-                                   y_axis_breaks = NULL, include_smooth = FALSE,
+                                   y_axis_breaks = NULL, include_smooth = FALSE, subtitle = NULL,
                                    y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
 
   library(dplyr)
@@ -169,6 +170,11 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
     ggtitle(title) +
     scale_color_manual(values = custom_colors) +
     guides(color = guide_legend(title = NULL))
+
+  # Add subtitle if provided
+  if (!is.null(subtitle)) {
+    p <- p + labs(subtitle = subtitle)
+  }
 
   # Modify the scale_y_continuous call
   if (!is.null(y_axis_breaks)) {

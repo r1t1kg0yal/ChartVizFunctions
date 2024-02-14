@@ -20,6 +20,9 @@
 #' @param x_change A string indicating whether to calculate a % change for the x variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
 #' @param y_change A string indicating whether to calculate a % change for the y variable: yoy, qoq, or mom. If NULL, then no change. Default NULL.
 #' @param date_ranges A list of date ranges to highlight on the plot.
+#' @param lof_color Color for the line of best fit. This parameter allows you to specify the color of the line of best fit (LOF) on the scatter plot. The default color is "black". Accepts any color value recognized by ggplot2, such as color names ("red", "blue", etc.) or hexadecimal color codes.
+#' @param dot_size Size of the normal (non-highlighted) dots on the scatter plot. This parameter controls the size of the standard points in the plot. The default size is 1. You can specify any positive numeric value to increase or decrease the size of these points.
+#' @param highlight_size Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.
 #'
 #' @return A ggplot object representing the scatter plot.
 #' @export
@@ -44,7 +47,8 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
                                 highlight_dates = NULL, highlight_latest = FALSE,
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,
                                 start_date = NULL, end_date = NULL, y_lag = NULL,
-                                x_change = NULL, y_change = NULL, date_ranges = NULL) {
+                                x_change = NULL, y_change = NULL, date_ranges = NULL,
+                                lof_color = "black", dot_size = 1, highlight_size = 3) {
 
   library(ggplot2)
   library(dplyr)
@@ -232,14 +236,14 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
 
   # Base plot with non-highlighted points in grey and no legend for date ranges
   p <- ggplot(data, aes(x = .data[[x_var]], y = .data[[y_var]])) +
-    geom_point(aes(color = highlight_color), size = 0.1, show.legend = FALSE) +
-    geom_point(data = data[!is.na(data$highlight_color), ], aes(color = highlight_color), size = 1, shape = 16) +
+    geom_point(aes(color = highlight_color), size = dot_size, show.legend = FALSE) +
+    geom_point(data = data[!is.na(data$highlight_color), ], aes(color = highlight_color), size = highlight_size, shape = 16) +
     scale_color_manual(values = highlight_colors, name = "Highlighted Dates") +
     theme(legend.position = "right")
 
   # Add line of best fit if requested
   if (!is.null(include_lof)) {
-    p <- p + geom_smooth(method = include_lof, se = FALSE, color = "black", size = 0.5, span = 0.1)
+    p <- p + geom_smooth(method = include_lof, se = FALSE, color = lof_color, size = 0.5, span = 0.1)
   }
 
   # Create the subtitle based on the provided constraints
