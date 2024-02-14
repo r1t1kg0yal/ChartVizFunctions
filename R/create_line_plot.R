@@ -15,6 +15,7 @@
 #' @param include_smooth A boolean indicating whether to include a Loess smoothed line. Only applies when plot_change is NULL.
 #' @param y_axis_lower_bound Lower bound for the y-axis (optional).
 #' @param y_axis_upper_bound Upper bound for the y-axis (optional).
+#' @param lof_span Span of the lof
 #'
 #' @return A ggplot object representing the line plot.
 #' @export
@@ -30,7 +31,7 @@
 #'                  include_smooth = TRUE)
 create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks,
                              x_axis_title, y_axis_title, title, plot_change = NULL,
-                             y_axis_breaks = NULL, include_smooth = TRUE,
+                             y_axis_breaks = NULL, include_smooth = TRUE, lof_span = 0.1,
                              y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
 
   library(dplyr)
@@ -142,7 +143,7 @@ create_line_plot <- function(data, var_name, start_year, end_year, x_axis_breaks
 
   # Add Loess smooth line if include_smooth is TRUE and the data is not a single change type
   if(include_smooth && is.null(plot_change)) {
-    p <- p + geom_smooth(se = FALSE, method = "loess", span = 0.1)
+    p <- p + geom_smooth(se = FALSE, method = "loess", span = lof_span)
   }
 
   # Modify the scale_y_continuous call

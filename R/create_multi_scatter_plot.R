@@ -14,6 +14,7 @@
 #' @param plot_type Type of the plot ('level' or 'yoy' for year-over-year).
 #' @param y_axis_breaks Break points for the y-axis (optional).
 #' @param include_smooth A boolean indicating whether to include a Loess smoothed line.
+#' @param lof_span Span of the lof
 #' @param y_axis_lower_bound Lower bound for the y-axis (optional).
 #' @param y_axis_upper_bound Upper bound for the y-axis (optional).
 #'
@@ -28,7 +29,8 @@
 #' print(multi_scatter_plot)
 create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                       x_axis_breaks, x_axis_title, y_axis_title, title, plot_type, y_axis_breaks = NULL,
-                                      include_smooth = FALSE, y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
+                                      include_smooth = FALSE, lof_span = 0.1,
+                                      y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
 
   # Assuming 'data' is your dataframe and 'var_name_list' contains the names of the variables you are plotting
   data <- data %>%
@@ -94,7 +96,7 @@ create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start
 
   # Add Loess smooth line if include_smooth is TRUE
   if(include_smooth && plot_type == "level") {
-    p <- p + geom_smooth(se = FALSE, method = "loess", span = 0.1, size = 0.2)
+    p <- p + geom_smooth(se = FALSE, method = "loess", span = lof_span, size = 0.2)
   }
 
   # Custom color palette

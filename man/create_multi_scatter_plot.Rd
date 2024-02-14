@@ -17,6 +17,7 @@ create_multi_scatter_plot(
   plot_type,
   y_axis_breaks = NULL,
   include_smooth = FALSE,
+  lof_span = 0.1,
   y_axis_lower_bound = NULL,
   y_axis_upper_bound = NULL
 )
@@ -45,6 +46,8 @@ create_multi_scatter_plot(
 \item{y_axis_breaks}{Break points for the y-axis (optional).}
 
 \item{include_smooth}{A boolean indicating whether to include a Loess smoothed line.}
+
+\item{lof_span}{Span of the lof}
 
 \item{y_axis_lower_bound}{Lower bound for the y-axis (optional).}
 

@@ -15,6 +15,7 @@
 #' @param var_changes A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or NULL for no change. The list must be the same length as 'var_name_list'.
 #' @param y_axis_breaks Break points for the y-axis (optional).
 #' @param include_smooth A boolean indicating whether to include a Loess smoothed line. Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).
+#' @param lof_span Span of the lof
 #' @param y_axis_lower_bound Lower bound for the y-axis (optional).
 #' @param y_axis_upper_bound Upper bound for the y-axis (optional).
 #'
@@ -33,7 +34,7 @@
 
 create_multi_line_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
                                    x_axis_breaks, x_axis_title, y_axis_title, title, var_changes = NULL,
-                                   y_axis_breaks = NULL, include_smooth = FALSE, subtitle = NULL,
+                                   y_axis_breaks = NULL, include_smooth = FALSE, lof_span = 0.1, subtitle = NULL,
                                    y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
 
   library(dplyr)
@@ -146,7 +147,7 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
 
   # Add Loess smooth line if include_smooth is TRUE
   if(include_smooth) {
-    p <- p + geom_smooth(se = FALSE, method = "loess", span = 0.1)
+    p <- p + geom_smooth(se = FALSE, method = "loess", span = lof_span)
   }
 
   # Custom color palette

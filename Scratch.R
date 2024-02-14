@@ -29,8 +29,8 @@ fredr_set_key("e5fede734aaa8bd57688678bdfe94620")
 create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_reserves"),
                        start_year = 2000, end_year = 2023, var_label_list = c("M2", "M2 Less Reserves"),
                        x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 1,
-                       y_axis_breaks = 1000,
-                       var_changes = c("yoy", "yoy"), include_smooth = FALSE)
+                       y_axis_breaks = 1000, lof_span = 0.1,
+                       var_changes = NULL, include_smooth = TRUE)
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
