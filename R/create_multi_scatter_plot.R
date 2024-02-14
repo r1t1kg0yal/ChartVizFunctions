@@ -37,6 +37,9 @@ create_multi_scatter_plot <- function(data, var_name_list, var_label_list, start
     filter(!is.na(date)) %>%  # Remove NAs in date if necessary
     filter_at(vars(one_of(var_name_list)), all_vars(!is.na(.)))  # Remove NAs in all plotting variables
 
+  # Get recession data and merge with existing data
+  data <- add_recession_data(data)
+
   # Validate inputs
   if (!plot_type %in% c('level', 'yoy')) {
     stop("Invalid plot type: must be 'level' or 'yoy'")
