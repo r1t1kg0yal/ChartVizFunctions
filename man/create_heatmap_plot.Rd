@@ -21,7 +21,10 @@ create_heatmap_plot(
   color_1 = "indianred",
   color_2 = "dodgerblue",
   mute_color_1 = FALSE,
-  mute_color_2 = TRUE
+  mute_color_2 = TRUE,
+  legend_name = "Capped Level",
+  x_axis_label = NULL,
+  y_axis_label = NULL
 )
 }
 \arguments{
@@ -58,6 +61,12 @@ create_heatmap_plot(
 \item{mute_color_1}{A boolean indicating whether to mute `color_1`. If TRUE, `color_1` will be muted, which typically makes it less bright and more pastel-like. Default is FALSE.}
 
 \item{mute_color_2}{A boolean indicating whether to mute `color_2`. If TRUE, `color_2` will be muted, which typically makes it less bright and more pastel-like. Default is TRUE.}
+
+\item{legend_name}{Title for the legend, defaulted as "Capped Level"}
+
+\item{x_axis_label}{X axis label, no label default}
+
+\item{y_axis_label}{T axis label, no label default}
 }
 \value{
 A ggplot object representing the heatmap.

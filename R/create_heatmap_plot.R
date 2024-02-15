@@ -19,6 +19,9 @@
 #' @param color_2 The secondary color used in the heatmap. This can be any valid color name or hexadecimal color code. The default is "dodgerblue". This color is used for the high end of the gradient scale unless `flip_colors` is TRUE.
 #' @param mute_color_1 A boolean indicating whether to mute `color_1`. If TRUE, `color_1` will be muted, which typically makes it less bright and more pastel-like. Default is FALSE.
 #' @param mute_color_2 A boolean indicating whether to mute `color_2`. If TRUE, `color_2` will be muted, which typically makes it less bright and more pastel-like. Default is TRUE.
+#' @param legend_name Title for the legend, defaulted as "Capped Level"
+#' @param x_axis_label X axis label, no label default
+#' @param y_axis_label T axis label, no label default
 #'
 #' @return A ggplot object representing the heatmap.
 #' @export
@@ -38,7 +41,8 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
                                 frequency, change_space, flip_colors = FALSE, override_subtitle = NULL,
                                 include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL,
                                 color_1 = "indianred", color_2 = "dodgerblue",
-                                mute_color_1 = FALSE, mute_color_2 = TRUE) {
+                                mute_color_1 = FALSE, mute_color_2 = TRUE, legend_name = "Capped Level",
+                                x_axis_label = NULL, y_axis_label = NULL) {
 
   # Check if the dataset 'data' exists
   if (!exists("data")) {
@@ -143,19 +147,19 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
     heatmap_plot <- ggplot(heatmap_data_long, aes(x = year, y = period, fill = capped_level_variable)) +
       geom_tile(color = "white") +
       scale_fill_gradient2(low = low_color, high = high_color, mid = "white",
-                           midpoint = median_value, name = "Capped Level", na.value = "white",
+                           midpoint = median_value, name = legend_name, na.value = "white",
                            labels = scales::number_format(big.mark = ",")) +
       theme_minimal(base_size = 10) +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, margin = margin(b = 5, t = 0, unit = "pt")),
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
             legend.position = "right",
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             panel.background = element_rect(fill = "white", colour = "white")) +
       scale_x_continuous(breaks = heatmap_breaks_x_axis(heatmap_data_long$year, x_axis_breaks),
                          labels = four_digit_year) +
-      labs(fill = "Level Variable", title = title)
+      labs(fill = "Level Variable", title = title,
+           x = x_axis_label,
+           y = y_axis_label)
 
     # Adjust y-axis breaks for weekly data
     if (frequency == 'weekly') {

@@ -36,12 +36,13 @@ create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
                     frequency = "monthly", change_space = "level", num_decimals = 1,
                     include_cell_numbers = TRUE, scaling_power = 6, flip_colors = TRUE,
-                    color_2 = "green", mute_color_2 = TRUE)
+                    color_2 = "green", mute_color_2 = TRUE, highlight_latest = TRUE)
 
-create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 2000,
-                    end_year = 2023, x_axis_breaks = 5, title = "Initial Claims NSA",
-                    frequency = "weekly", change_space = "level", num_decimals = 1,
-                    include_cell_numbers = TRUE, scaling_power = 5, flip_colors = FALSE)
+create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 1992,
+                    end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
+                    frequency = "weekly", change_space = "level", num_decimals = 0,override_subtitle = "1000s",
+                    include_cell_numbers = TRUE, scaling_power = 3, flip_colors = TRUE,
+                    legend_name = "Legend Name", x_axis_label = NULL, y_axis_label = NULL)
 
 create_line_plot(data = monthly_data, var_name = "employee_comp", start_year = 2000, end_year = 2023, x_axis_breaks = 5,
                  x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Employee Comp",
