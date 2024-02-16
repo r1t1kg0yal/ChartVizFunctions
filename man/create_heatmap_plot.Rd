@@ -24,7 +24,9 @@ create_heatmap_plot(
   mute_color_2 = TRUE,
   legend_name = "Capped Level",
   x_axis_label = NULL,
-  y_axis_label = NULL
+  y_axis_label = NULL,
+  text_size = 3,
+  text_bold = FALSE
 )
 }
 \arguments{
@@ -67,6 +69,10 @@ create_heatmap_plot(
 \item{x_axis_label}{X axis label, no label default}
 
 \item{y_axis_label}{T axis label, no label default}
+
+\item{text_size}{Size of text in cells}
+
+\item{text_bold}{Whether or not you want the text in the cells to be bold}
 }
 \value{
 A ggplot object representing the heatmap.

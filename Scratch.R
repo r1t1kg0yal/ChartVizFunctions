@@ -36,7 +36,7 @@ create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
                     frequency = "monthly", change_space = "level", num_decimals = 1,
                     include_cell_numbers = TRUE, scaling_power = 6, flip_colors = TRUE,
-                    color_2 = "green", mute_color_2 = TRUE, highlight_latest = TRUE)
+                    color_2 = "green", mute_color_2 = TRUE, text_size = 1.8, text_bold = FALSE)
 
 create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_year = 1992,
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",

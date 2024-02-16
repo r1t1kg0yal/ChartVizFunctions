@@ -22,6 +22,8 @@
 #' @param legend_name Title for the legend, defaulted as "Capped Level"
 #' @param x_axis_label X axis label, no label default
 #' @param y_axis_label T axis label, no label default
+#' @param text_size Size of text in cells
+#' @param text_bold Whether or not you want the text in the cells to be bold
 #'
 #' @return A ggplot object representing the heatmap.
 #' @export
@@ -42,7 +44,7 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
                                 include_cell_numbers = FALSE, scaling_power = NULL, num_decimals = NULL,
                                 color_1 = "indianred", color_2 = "dodgerblue",
                                 mute_color_1 = FALSE, mute_color_2 = TRUE, legend_name = "Capped Level",
-                                x_axis_label = NULL, y_axis_label = NULL) {
+                                x_axis_label = NULL, y_axis_label = NULL, text_size = 3, text_bold = FALSE) {
 
   # Check if the dataset 'data' exists
   if (!exists("data")) {
@@ -168,14 +170,16 @@ create_heatmap_plot <- function(data, var_name, start_year, end_year, x_axis_bre
 
     # Add cell numbers if requested
     if (include_cell_numbers) {
-      subtitle_text <- ifelse(!is.null(override_subtitle), override_subtitle,
-                              paste("Cells labeled as 10^", scaling_power, " units", sep = ""))
+      # Define font weight based on text_bold parameter
+      font_weight <- if(text_bold) "bold" else "plain"
 
       heatmap_plot <- heatmap_plot +
         geom_text(aes(label = ifelse(is.na(label_data), "",
                                      sprintf(label_format, label_data))),
-                  size = 2, vjust = 0.5, hjust = 0.5) +
-        labs(subtitle = subtitle_text)
+                  size = text_size, fontface = font_weight, vjust = 0.5, hjust = 0.5) + # Modified this line
+        labs(subtitle = ifelse(!is.null(override_subtitle), override_subtitle,
+                               ifelse(change_space == "yoy", "YoY % Change",
+                                      paste("Cells labeled as 10^", scaling_power, " units", sep = ""))))
     }
 
     return(heatmap_plot)
