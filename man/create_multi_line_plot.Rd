@@ -42,7 +42,7 @@ create_multi_line_plot(
 
 \item{title}{Title of the plot.}
 
-\item{var_changes}{A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or NULL for no change. The list must be the same length as 'var_name_list'.}
+\item{var_changes}{A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or 'level' for no change. The list must be the same length as 'var_name_list'.}
 
 \item{y_axis_breaks}{Break points for the y-axis (optional).}
 

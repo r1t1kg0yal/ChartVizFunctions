@@ -57,7 +57,7 @@ create_line_plot(data = fm_impulse_data, var_name = "rolling_annual_gross_ust_ou
 create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
-                       include_smooth = FALSE, var_changes = c("yoy", "mom", "yoy"))
+                       include_smooth = FALSE, var_changes = NULL)
 
 create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "cpi"),
                           var_labels = c("Fed Funds Rate (%)", "CPI"), start_date = "2000-01-01",

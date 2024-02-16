@@ -12,7 +12,7 @@
 #' @param y_axis_title Title for the y-axis.
 #' @param title Title of the plot.
 #' @param subtitle Subtitle for the plot.
-#' @param var_changes A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or NULL for no change. The list must be the same length as 'var_name_list'.
+#' @param var_changes A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or 'level' for no change. The list must be the same length as 'var_name_list'.
 #' @param y_axis_breaks Break points for the y-axis (optional).
 #' @param include_smooth A boolean indicating whether to include a Loess smoothed line. Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).
 #' @param lof_span Span of the lof
@@ -65,14 +65,14 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
     stop("The lengths of 'var_name_list' and 'var_label_list' must be the same")
   }
   if (is.null(var_changes)) {
-    var_changes <- rep(list(NULL), length(var_name_list))
+    var_changes <- rep(list("level"), length(var_name_list))
   }
   if (length(var_name_list) != length(var_changes)) {
     stop("The lengths of 'var_name_list' and 'var_changes' must be the same")
   }
-  valid_changes <- c("mom", "qoq", "yoy", NULL)
+  valid_changes <- c("mom", "qoq", "yoy", "level")
   if (any(sapply(var_changes, function(x) !is.null(x) && !x %in% valid_changes))) {
-    stop("Elements of 'var_changes' must be 'mom', 'qoq', 'yoy', or NULL.")
+    stop("Elements of 'var_changes' must be 'mom', 'qoq', 'yoy', or 'level'")
   }
 
   # Determine the frequency of the data
