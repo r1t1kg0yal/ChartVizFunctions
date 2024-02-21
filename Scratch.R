@@ -27,10 +27,10 @@ fm_impulse_data$date <- as.Date(fm_impulse_data$date)
 fredr_set_key("e5fede734aaa8bd57688678bdfe94620")
 
 create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_reserves"),
-                       start_year = 2000, end_year = 2023, var_label_list = c("M2", "M2 Less Reserves"),
-                       x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 1,
-                       y_axis_breaks = 1000, lof_span = 0.1,
-                       var_changes = NULL, include_smooth = TRUE)
+                       start_date = "2000-01-01", end_date = "2023-01-01", var_label_list = c("M2", "M2 Less Reserves"),
+                       x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 24,
+                       y_axis_breaks = 1000, lof_span = 0.1, use_month_intervals = TRUE,
+                       var_changes = NULL, include_smooth = TRUE, diagonal_x_labels = TRUE)
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",
@@ -44,10 +44,10 @@ create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_y
                     include_cell_numbers = TRUE, scaling_power = 3, flip_colors = TRUE,
                     legend_name = "Legend Name", x_axis_label = NULL, y_axis_label = NULL)
 
-create_line_plot(data = monthly_data, var_name = "employee_comp", start_year = 2000, end_year = 2023, x_axis_breaks = 5,
-                 x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Employee Comp",
+create_line_plot(data = monthly_data, var_name = "employee_comp", start_date = "2000-01-01", end_date = "2023-01-01", x_axis_breaks = 24,
+                 x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Employee Comp", use_month_intervals = TRUE,
                  plot_change = NULL, y_axis_breaks = NULL,
-                 include_smooth = FALSE)
+                 include_smooth = FALSE, diagonal_x_labels = TRUE)
 
 create_line_plot(data = fm_impulse_data, var_name = "rolling_annual_gross_ust_outlays", start_year = 2000, end_year = 2023,
                  x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Rolling Annual Gross Treasury Outlays",
@@ -68,16 +68,16 @@ create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_
                     x_label = "Under Construction (1000s)", y_label = "Starts (1000s)", start_date = "2000-01-01",
                     title = "Housings Starts vs Under Construction", highlight_dates = c("2022-01-01"),
                     y_lag = NULL, lof_color = "red", dot_size = 1, highlight_size = 3,
-                    include_lof = "lm", x_change = "yoy",
-                    log_x = FALSE, log_y = FALSE)
+                    include_lof = "lm", x_change = "yoy", diagonal_x_labels = FALSE,
+                    log_x = FALSE, log_y = FALSE, x_lower_bound = FALSE, lof_bounds = c("2002-01-01", "2003-01-01"))
 
 create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "loans_ex_ppp_loans", start_date = "2000-01-01",
                     x_label = "Fed Funds Rate (%)", y_label = "Monetary Impulse",
                     title = "Monetary Impulse vs Fed Funds Rate",
                     highlight_dates = c("2022-01-01", "2021-01-01", "2023-01-01", "2020-01-01", "2019-01-01", "2018-01-01"),
                     highlight_latest = TRUE, y_change = "yoy",
-                    include_lof = NULL,
-                    log_x = FALSE, log_y = FALSE)
+                    include_lof = "lm",
+                    log_x = FALSE, log_y = FALSE, x_lower_bound = 5, y_lower_bound = 0)
 
 create_returns_plot(price_data = weekdaily_data, start_date = "2023-01-01", variables = c("SPY", "TLT"),
                     combo_bets = list(combo_bet("SPY", "TLT", 1, -1)), add_risk_parity = TRUE)

@@ -26,7 +26,13 @@ create_scatter_plot(
   lof_color = "black",
   dot_size = 1,
   highlight_size = 3,
-  lof_span = 0.1
+  lof_span = 0.1,
+  diagonal_x_labels = FALSE,
+  x_lower_bound = NULL,
+  x_upper_bound = NULL,
+  y_lower_bound = NULL,
+  y_upper_bound = NULL,
+  lof_bounds = FALSE
 )
 }
 \arguments{
@@ -72,7 +78,19 @@ create_scatter_plot(
 
 \item{highlight_size}{Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.}
 
-\item{lof_span}{Span of the lof}
+\item{lof_span}{Span of the lof.}
+
+\item{diagonal_x_labels}{A boolean indicating whether x-axis labels should be diagonal.}
+
+\item{x_lower_bound}{Lower bound for the x-axis (optional).}
+
+\item{x_upper_bound}{Upper bound for the x-axis (optional).}
+
+\item{y_lower_bound}{Lower bound for the y-axis (optional).}
+
+\item{y_upper_bound}{Upper bound for the y-axis (optional).}
+
+\item{lof_bounds}{A vector of two dates to calculate the line of best fit only using data between those dates (optional).}
 }
 \value{
 A ggplot object representing the scatter plot.

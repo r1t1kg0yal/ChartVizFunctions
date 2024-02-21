@@ -7,9 +7,10 @@
 create_line_plot(
   data,
   var_name,
-  start_year,
-  end_year,
+  start_date,
+  end_date,
   x_axis_breaks,
+  use_month_intervals = FALSE,
   x_axis_title,
   y_axis_title,
   title,
@@ -18,7 +19,9 @@ create_line_plot(
   include_smooth = TRUE,
   lof_span = 0.1,
   y_axis_lower_bound = NULL,
-  y_axis_upper_bound = NULL
+  y_axis_upper_bound = NULL,
+  recession_bars = FALSE,
+  diagonal_x_labels = FALSE
 )
 }
 \arguments{
@@ -26,11 +29,13 @@ create_line_plot(
 
 \item{var_name}{Name of the variable in 'data' to be plotted.}
 
-\item{start_year}{The starting year for the plot.}
+\item{start_date}{The starting date for the plot.}
 
-\item{end_year}{The ending year for the plot.}
+\item{end_date}{The ending date for the plot.}
 
-\item{x_axis_breaks}{Breaks for the x-axis, usually years.}
+\item{x_axis_breaks}{Breaks for the x-axis, can be years or months depending on 'use_month_intervals'.}
+
+\item{use_month_intervals}{A boolean to determine if the x-axis should use month intervals.}
 
 \item{x_axis_title}{Title for the x-axis.}
 
@@ -44,11 +49,15 @@ create_line_plot(
 
 \item{include_smooth}{A boolean indicating whether to include a Loess smoothed line. Only applies when plot_change is NULL.}
 
-\item{lof_span}{Span of the lof}
+\item{lof_span}{Span for the loess smoothing (optional).}
 
 \item{y_axis_lower_bound}{Lower bound for the y-axis (optional).}
 
 \item{y_axis_upper_bound}{Upper bound for the y-axis (optional).}
+
+\item{recession_bars}{A boolean indicating whether to include recession bars in the plot.}
+
+\item{diagonal_x_labels}{A boolean indicating whether x-axis labels should be diagonal.}
 }
 \value{
 A ggplot object representing the line plot.
@@ -57,12 +66,22 @@ A ggplot object representing the line plot.
 This function generates a line plot for a given variable over time, with options for different types of transformations and additional smoothing.
 }
 \examples{
-create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
-                 end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "BEA Corporate Profits Less Fed Profits",
+create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits",
+                 start_date = "2000-01-01", end_date = "2023-12-31",
+                 x_axis_breaks = 5, use_month_intervals = FALSE,
+                 x_axis_title = "", y_axis_title = "Billions of Dollars",
+                 title = "BEA Corporate Profits Less Fed Profits",
                  plot_change = NULL, y_axis_breaks = NULL,
-                 include_smooth = FALSE)
-create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits", start_year = 2000,
-                 end_year = 2023, x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY \% Change", title = "BEA Corporate Profits Less Fed Profits",
+                 include_smooth = FALSE, lof_span = 0.1,
+                 y_axis_lower_bound = NULL, y_axis_upper_bound = NULL,
+                 recession_bars = FALSE, diagonal_x_labels = FALSE)
+create_line_plot(data = monthly_data, var_name = "corp_profits_less_fed_profits",
+                 start_date = "2000-01-01", end_date = "2023-12-31",
+                 x_axis_breaks = 5, use_month_intervals = FALSE,
+                 x_axis_title = "", y_axis_title = "YoY \% Change",
+                 title = "BEA Corporate Profits Less Fed Profits",
                  plot_change = "yoy", y_axis_breaks = 2,
-                 include_smooth = TRUE)
+                 include_smooth = TRUE, lof_span = 0.1,
+                 y_axis_lower_bound = NULL, y_axis_upper_bound = NULL,
+                 recession_bars = FALSE, diagonal_x_labels = FALSE)
 }

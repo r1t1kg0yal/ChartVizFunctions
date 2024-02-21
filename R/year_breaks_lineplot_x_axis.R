@@ -1,4 +1,4 @@
-# Function to generate date breaks every n years on multiples of n (x axis)
+# Function to generate year interval breaks
 year_breaks_lineplot_x_axis <- function(date_range, n){
   start_year <- floor(lubridate::year(min(date_range)) / n) * n
   end_year <- ceiling(lubridate::year(max(date_range)) / n) * n

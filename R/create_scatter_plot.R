@@ -23,7 +23,13 @@
 #' @param lof_color Color for the line of best fit. This parameter allows you to specify the color of the line of best fit (LOF) on the scatter plot. The default color is "black". Accepts any color value recognized by ggplot2, such as color names ("red", "blue", etc.) or hexadecimal color codes.
 #' @param dot_size Size of the normal (non-highlighted) dots on the scatter plot. This parameter controls the size of the standard points in the plot. The default size is 1. You can specify any positive numeric value to increase or decrease the size of these points.
 #' @param highlight_size Size of the highlighted dots on the scatter plot. This parameter controls the size of the dots that are highlighted (e.g., through `highlight_dates`, `highlight_latest`, or `date_ranges`). The default size is 3. You can specify any positive numeric value to adjust the size of these highlighted points.
-#' @param lof_span Span of the lof
+#' @param lof_span Span of the lof.
+#' @param diagonal_x_labels A boolean indicating whether x-axis labels should be diagonal.
+#' @param x_lower_bound Lower bound for the x-axis (optional).
+#' @param x_upper_bound Upper bound for the x-axis (optional).
+#' @param y_lower_bound Lower bound for the y-axis (optional).
+#' @param y_upper_bound Upper bound for the y-axis (optional).
+#' @param lof_bounds A vector of two dates to calculate the line of best fit only using data between those dates (optional).
 #'
 #' @return A ggplot object representing the scatter plot.
 #' @export
@@ -49,7 +55,9 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
                                 include_lof = NULL, log_x = FALSE, log_y = FALSE,
                                 start_date = NULL, end_date = NULL, y_lag = NULL,
                                 x_change = NULL, y_change = NULL, date_ranges = NULL,
-                                lof_color = "black", dot_size = 1, highlight_size = 3, lof_span = 0.1) {
+                                lof_color = "black", dot_size = 1, highlight_size = 3, lof_span = 0.1,
+                                diagonal_x_labels = FALSE, x_lower_bound = NULL, x_upper_bound = NULL,
+                                y_lower_bound = NULL, y_upper_bound = NULL, lof_bounds = FALSE) {
 
   library(ggplot2)
   library(dplyr)
@@ -191,6 +199,33 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   # Filter out rows with NA in x_var or y_var
   data <- data %>% filter(!is.na(data[[x_var]]) & !is.na(data[[y_var]]))
 
+  # Filter data based on x and y axis bounds
+  if (!is.null(x_lower_bound) && !is.na(x_lower_bound)) {
+    data <- data %>% filter(.data[[x_var]] >= x_lower_bound)
+  }
+  if (!is.null(x_upper_bound) && !is.na(x_upper_bound)) {
+    data <- data %>% filter(.data[[x_var]] <= x_upper_bound)
+  }
+  if (!is.null(y_lower_bound) && !is.na(y_lower_bound)) {
+    data <- data %>% filter(.data[[y_var]] >= y_lower_bound)
+  }
+  if (!is.null(y_upper_bound) && !is.na(y_upper_bound)) {
+    data <- data %>% filter(.data[[y_var]] <= y_upper_bound)
+  }
+
+  # Calculate LOF only on specified bounds
+  if (!isFALSE(lof_bounds) && length(lof_bounds) == 2) {
+    # Ensure that lof_bounds contains valid dates
+    if (all(lubridate::is.Date(as.Date(lof_bounds)))) {
+      lof_data <- data %>%
+        filter(date >= as.Date(lof_bounds[1]) & date <= as.Date(lof_bounds[2]))
+    } else {
+      stop("lof_bounds must contain valid dates.")
+    }
+  } else {
+    lof_data <- data
+  }
+
   # Determine the latest non-missing data point for the specified variables
   if(highlight_latest) {
     latest_date <- max(data$date[!is.na(data[[x_var]]) & !is.na(data[[y_var]])], na.rm = TRUE)
@@ -242,9 +277,8 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
     scale_color_manual(values = highlight_colors, name = "Highlighted Dates") +
     theme(legend.position = "right")
 
-  # Add line of best fit if requested
   if (!is.null(include_lof)) {
-    p <- p + geom_smooth(method = include_lof, se = FALSE, color = lof_color, size = 0.5, span = lof_span)
+    p <- p + geom_smooth(data = lof_data, method = include_lof, se = FALSE, color = lof_color, size = 0.5, span = lof_span, fullrange = TRUE)
   }
 
   # Create the subtitle based on the provided constraints
@@ -297,6 +331,11 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   # Add the subtitle to the plot
   if (!is.null(subtitle)) {
     p <- p + labs(subtitle = subtitle)
+  }
+
+  # Apply diagonal labels if diagonal_x_labels is TRUE
+  if (diagonal_x_labels) {
+    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
 
   # Return the plot

@@ -1,41 +1,55 @@
 #' Create a Multi-Line Plot
 #'
-#' This function generates a multi-line plot for a list of variables over time, with options for different types of data transformations and additional smoothing.
+#' This function generates a multi-line plot for a list of variables over time,
+#' with options for different types of data transformations and additional smoothing.
 #'
-#' @param data A data frame containing the dataset for plotting. Must include a 'date' column.
+#' @param data A data frame containing the dataset for plotting.
+#' Must include a 'date' column.
 #' @param var_name_list A vector of variable names in 'data' to be plotted.
-#' @param var_label_list A vector of labels corresponding to the variables for plot legend.
-#' @param start_year The starting year for the plot.
-#' @param end_year The ending year for the plot.
-#' @param x_axis_breaks Breaks for the x-axis, usually years.
+#' @param var_label_list A vector of labels corresponding to the variables for the plot legend.
+#' @param start_date The starting date for the plot.
+#' @param end_date The ending date for the plot.
+#' @param x_axis_breaks Breaks for the x-axis, can be years or months depending on 'use_month_intervals'.
+#' @param use_month_intervals A boolean to determine if the x-axis should use month intervals.
 #' @param x_axis_title Title for the x-axis.
 #' @param y_axis_title Title for the y-axis.
 #' @param title Title of the plot.
-#' @param subtitle Subtitle for the plot.
-#' @param var_changes A list of transformations to apply to each variable. Acceptable values for each element are 'mom' for month-over-month, 'qoq' for quarter-over-quarter, 'yoy' for year-over-year, or 'level' for no change. The list must be the same length as 'var_name_list'.
+#' @param subtitle Subtitle for the plot (optional).
+#' @param var_changes A list of transformations to apply to each variable.
+#' Acceptable values are 'mom' for month-over-month, 'qoq' for quarter-over-quarter,
+#' 'yoy' for year-over-year, or 'level' for no change.
+#' The list must be the same length as 'var_name_list'.
 #' @param y_axis_breaks Break points for the y-axis (optional).
-#' @param include_smooth A boolean indicating whether to include a Loess smoothed line. Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).
-#' @param lof_span Span of the lof
+#' @param include_smooth A boolean indicating whether to include a Loess smoothed line.
+#' Applicable only when no transformation is applied (i.e., var_changes is NULL or contains all NULLs).
+#' @param lof_span Span for the loess smoothing (optional).
 #' @param y_axis_lower_bound Lower bound for the y-axis (optional).
 #' @param y_axis_upper_bound Upper bound for the y-axis (optional).
+#' @param recession_bars A boolean indicating whether to include recession bars in the plot.
+#' @param diagonal_x_labels A boolean indicating whether x-axis labels should be diagonal.
 #'
 #' @return A ggplot object representing the multi-line plot.
 #' @export
 #'
 #' @examples
-#' create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
-#'                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
-#'                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
-#'                        var_changes = NULL, include_smooth = FALSE)
-#' create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
-#'                        start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
-#'                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "YoY % Change", title = "Commercial Banks",
-#'                        var_changes = c("yoy", "yoy", "yoy"), y_axis_breaks = 10, include_smooth = TRUE)
+#' create_multi_line_plot(data = monthly_data,
+#'                        var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
+#'                        var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+#'                        start_date = "1980-01-01", end_date = "2023-12-31",
+#'                        x_axis_breaks = 5, use_month_intervals = FALSE,
+#'                        x_axis_title = "Year", y_axis_title = "Billions of Dollars",
+#'                        title = "Commercial Banks", subtitle = "Financial Indicators Over Time",
+#'                        var_changes = NULL, include_smooth = FALSE, lof_span = 0.1,
+#'                        y_axis_lower_bound = NULL, y_axis_upper_bound = NULL,
+#'                        recession_bars = FALSE, diagonal_x_labels = FALSE)
 
-create_multi_line_plot <- function(data, var_name_list, var_label_list, start_year, end_year,
-                                   x_axis_breaks, x_axis_title, y_axis_title, title, var_changes = NULL,
-                                   y_axis_breaks = NULL, include_smooth = FALSE, lof_span = 0.1, subtitle = NULL,
-                                   y_axis_lower_bound = NULL, y_axis_upper_bound = NULL) {
+create_multi_line_plot <- function(data, var_name_list, var_label_list, start_date, end_date,
+                                   x_axis_breaks, use_month_intervals = FALSE,
+                                   x_axis_title, y_axis_title, title, var_changes = NULL,
+                                   y_axis_breaks = NULL, include_smooth = FALSE, lof_span = 0.1,
+                                   subtitle = NULL, y_axis_lower_bound = NULL,
+                                   y_axis_upper_bound = NULL, recession_bars = FALSE,
+                                   diagonal_x_labels = FALSE) {
 
   library(dplyr)
   library(ggplot2)
@@ -133,17 +147,20 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
     select(date, one_of(var_name_list)) %>%
     gather(key = "variable", value = "value", -date) %>%
     mutate(
-      year = year(date),
       variable_label = factor(variable, levels = var_name_list, labels = var_label_list)
     ) %>%
-    filter(year(date) >= start_year & year(date) <= end_year)
+    filter(date >= as.Date(start_date) & date <= as.Date(end_date))
 
   # Base plot
-  p <- ggplot(long_data, aes(x = date, y = value, color = variable_label)) +
-    geom_rect(data = get_recession_periods(data) %>%
-                filter(start >= as.Date(paste0(start_year, "-01-01")) & end <= as.Date(paste0(end_year, "-12-31"))),
-              aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.5, inherit.aes = FALSE) +
+  p <- ggplot(long_data, aes(x = date, y = value, color = variable_label))
     geom_line()
+
+  # Add recession bars if recession_bars is TRUE
+  if (recession_bars) {
+    p <- p + geom_rect(data = get_recession_periods(data) %>%
+                         filter(start >= as.Date(paste0(start_year, "-01-01")) & end <= as.Date(paste0(end_year, "-12-31"))),
+                       aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.5, inherit.aes = FALSE)
+  }
 
   # Add Loess smooth line if include_smooth is TRUE
   if(include_smooth) {
@@ -153,9 +170,17 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
   # Custom color palette
   custom_colors <- c("blue3", "red3", "green4", "darkgrey", "darkorange2", "yellow3", "purple2", "sienna4", "deepskyblue3", "orchid2")
 
+  # Modify x-axis scale based on the use of month or year intervals
+  if (use_month_intervals) {
+    p <- p + scale_x_date(breaks = month_breaks_lineplot_x_axis(start_date, end_date, x_axis_breaks),
+                          date_labels = "%Y-%m")
+  } else {
+    p <- p + scale_x_date(breaks = year_breaks_lineplot_x_axis(data$date, x_axis_breaks),
+                          labels = date_format("%Y"))
+  }
+
   # Add additional plot features
   p <- p +
-    scale_x_date(breaks = year_breaks_lineplot_x_axis(data$date, x_axis_breaks), labels = date_format("%Y")) +
     xlab(x_axis_title) +
     ylab(y_axis_title) +
     theme_minimal(base_size = 10) +
@@ -171,6 +196,11 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_ye
     ggtitle(title) +
     scale_color_manual(values = custom_colors) +
     guides(color = guide_legend(title = NULL))
+
+  # Apply diagonal labels if diagonal_x_labels is TRUE
+  if (diagonal_x_labels) {
+    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  }
 
   # Add subtitle if provided
   if (!is.null(subtitle)) {
