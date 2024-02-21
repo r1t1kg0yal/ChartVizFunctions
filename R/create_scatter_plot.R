@@ -199,6 +199,19 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   # Filter out rows with NA in x_var or y_var
   data <- data %>% filter(!is.na(data[[x_var]]) & !is.na(data[[y_var]]))
 
+  # Calculate LOF only on specified bounds
+  if (!isFALSE(lof_bounds) && length(lof_bounds) == 2) {
+    # Ensure that lof_bounds contains valid dates
+    if (all(lubridate::is.Date(as.Date(lof_bounds)))) {
+      lof_data <- data %>%
+        filter(date >= as.Date(lof_bounds[1]) & date <= as.Date(lof_bounds[2]))
+    } else {
+      stop("lof_bounds must contain valid dates.")
+    }
+  } else {
+    lof_data <- data
+  }
+
   # Filter data based on x and y axis bounds
   if (!is.null(x_lower_bound) && !is.na(x_lower_bound)) {
     data <- data %>% filter(.data[[x_var]] >= x_lower_bound)
@@ -211,19 +224,6 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
   }
   if (!is.null(y_upper_bound) && !is.na(y_upper_bound)) {
     data <- data %>% filter(.data[[y_var]] <= y_upper_bound)
-  }
-
-  # Calculate LOF only on specified bounds
-  if (!isFALSE(lof_bounds) && length(lof_bounds) == 2) {
-    # Ensure that lof_bounds contains valid dates
-    if (all(lubridate::is.Date(as.Date(lof_bounds)))) {
-      lof_data <- data %>%
-        filter(date >= as.Date(lof_bounds[1]) & date <= as.Date(lof_bounds[2]))
-    } else {
-      stop("lof_bounds must contain valid dates.")
-    }
-  } else {
-    lof_data <- data
   }
 
   # Determine the latest non-missing data point for the specified variables

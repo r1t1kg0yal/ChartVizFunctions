@@ -69,7 +69,7 @@ create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_
                     title = "Housings Starts vs Under Construction", highlight_dates = c("2022-01-01"),
                     y_lag = NULL, lof_color = "red", dot_size = 1, highlight_size = 3,
                     include_lof = "lm", x_change = "yoy", diagonal_x_labels = FALSE,
-                    log_x = FALSE, log_y = FALSE, x_lower_bound = FALSE, lof_bounds = c("2002-01-01", "2003-01-01"))
+                    log_x = FALSE, log_y = FALSE, x_lower_bound = 0, lof_bounds = c("2002-01-01", "2003-01-01"))
 
 create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "loans_ex_ppp_loans", start_date = "2000-01-01",
                     x_label = "Fed Funds Rate (%)", y_label = "Monetary Impulse",
