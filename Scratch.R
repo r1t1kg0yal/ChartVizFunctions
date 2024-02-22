@@ -64,12 +64,12 @@ create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "
                           end_date = "2024-01-01", x_axis_breaks = 1, plot_title = "Fed Funds and YoY CPI",
                           var_1_type = "yoy", var_2_type = "mom", horizontal_line = "left")
 
-create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_var = "total_housing_starts_nsa", subtitle = "Y Lagged by 2y",
+create_scatter_plot(data = monthly_data, x_var = "total_under_construct_nsa", y_var = "total_housing_starts_nsa",
                     x_label = "Under Construction (1000s)", y_label = "Starts (1000s)", start_date = "2000-01-01",
                     title = "Housings Starts vs Under Construction", highlight_dates = c("2022-01-01"),
                     y_lag = NULL, lof_color = "red", dot_size = 1, highlight_size = 3,
                     include_lof = "lm", x_change = "yoy", diagonal_x_labels = FALSE,
-                    log_x = FALSE, log_y = FALSE, x_lower_bound = 0, lof_bounds = c("2002-01-01", "2003-01-01"))
+                    log_x = FALSE, log_y = FALSE, x_lower_bound = 0)
 
 create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "loans_ex_ppp_loans", start_date = "2000-01-01",
                     x_label = "Fed Funds Rate (%)", y_label = "Monetary Impulse",
@@ -77,7 +77,7 @@ create_scatter_plot(data = fm_impulse_data, x_var = "fed_funds_rate", y_var = "l
                     highlight_dates = c("2022-01-01", "2021-01-01", "2023-01-01", "2020-01-01", "2019-01-01", "2018-01-01"),
                     highlight_latest = TRUE, y_change = "yoy",
                     include_lof = "lm",
-                    log_x = FALSE, log_y = FALSE, x_lower_bound = 5, y_lower_bound = 0)
+                    log_x = FALSE, log_y = FALSE, y_lower_bound = 0, lof_bounds = c("2022-01-01", "2023-01-01"))
 
 create_returns_plot(price_data = weekdaily_data, start_date = "2023-01-01", variables = c("SPY", "TLT"),
                     combo_bets = list(combo_bet("SPY", "TLT", 1, -1)), add_risk_parity = TRUE)

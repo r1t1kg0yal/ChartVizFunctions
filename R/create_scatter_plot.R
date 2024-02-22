@@ -226,6 +226,20 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, title = NU
     data <- data %>% filter(.data[[y_var]] <= y_upper_bound)
   }
 
+  # Filter data based on x and y axis bounds
+  if (!is.null(x_lower_bound) && !is.na(x_lower_bound)) {
+    lof_data <- lof_data %>% filter(lof_data[[x_var]] >= x_lower_bound)
+  }
+  if (!is.null(x_upper_bound) && !is.na(x_upper_bound)) {
+    lof_data <- lof_data %>% filter(lof_data[[x_var]] <= x_upper_bound)
+  }
+  if (!is.null(y_lower_bound) && !is.na(y_lower_bound)) {
+    lof_data <- lof_data %>% filter(lof_data[[y_var]] >= y_lower_bound)
+  }
+  if (!is.null(y_upper_bound) && !is.na(y_upper_bound)) {
+    lof_data <- lof_data %>% filter(lof_data[[y_var]] <= y_upper_bound)
+  }
+
   # Determine the latest non-missing data point for the specified variables
   if(highlight_latest) {
     latest_date <- max(data$date[!is.na(data[[x_var]]) & !is.na(data[[y_var]])], na.rm = TRUE)
