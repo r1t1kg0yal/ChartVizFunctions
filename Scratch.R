@@ -24,12 +24,15 @@ weekdaily_data$date <- as.Date(weekdaily_data$date)
 fm_impulse_data <- read.csv("data/fm_impulse_data.csv")
 fm_impulse_data$date <- as.Date(fm_impulse_data$date)
 
+weekly_data_temp <- read.csv("data/weekly_data_temp.csv")
+weekly_data_temp$date <- as.Date(weekly_data_temp$date)
+
 fredr_set_key("e5fede734aaa8bd57688678bdfe94620")
 
 create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_reserves"),
                        start_date = "2000-01-01", end_date = "2023-01-01", var_label_list = c("M2", "M2 Less Reserves"),
                        x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 24,
-                       y_axis_breaks = 1000, lof_span = 0.1, use_month_intervals = TRUE,
+                       y_axis_breaks = 1000, lof_span = 0.1, use_month_intervals = TRUE, recession_bars = TRUE,
                        var_changes = NULL, include_smooth = TRUE, diagonal_x_labels = TRUE)
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
@@ -44,9 +47,35 @@ create_heatmap_plot(data = weekly_data, var_name = "initial_claims_nsa", start_y
                     include_cell_numbers = TRUE, scaling_power = 3, flip_colors = TRUE,
                     legend_name = "Legend Name", x_axis_label = NULL, y_axis_label = NULL)
 
+# Heatmap example:
+create_heatmap_plot(
+  data = weekly_data,             # Name of your dataframe
+  var_name = "initial_claims_nsa", # Name of variable (must be in quotes)
+  start_year = 2000,               # Start year
+  end_year = 2024,                 # End year
+  x_axis_breaks = 5,               # Frequency of x axis year labels
+  title = "Initial Claims NSA",    # Plot title
+  frequency = "weekly",           # Frequency of data (monthly or weekly)- this will through a "plot_label" error if it's not correct
+  change_space = "level",          # Can be "level" or "yoy", if you want the heatmap to display "yoy" changes
+  num_decimals = 0,                # Number of decimals to display on heatmap
+  include_cell_numbers = TRUE,     # Whether you want to display the numbers on the heatmap at all
+  scaling_power = 3,               # Divides the numbers displayed on the heatmap by 10^x
+  override_subtitle = "Thousands of Persons",        # Provide your own subtitle
+  color_1 = "indianred",           # Low color
+  color_2 = "dodgerblue",          # High color
+  mute_color_1 = FALSE,            # Whether you want to mute the low color
+  mute_color_2 = TRUE,             # Whether you want to mute the high color
+  flip_colors = TRUE,              # Flip the color scheme (low becomes high)
+  legend_name = "Level",    # Legend name
+  x_axis_label = NULL,             # X axis label
+  y_axis_label = "Week",             # Y axis label
+  text_size = 2,                   # Size of text in heatmap cells
+  text_bold = FALSE                # TRUE if you want bold text
+)
+
 create_line_plot(data = monthly_data, var_name = "employee_comp", start_date = "2000-01-01", end_date = "2023-01-01", x_axis_breaks = 24,
                  x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Employee Comp", use_month_intervals = TRUE,
-                 plot_change = NULL, y_axis_breaks = NULL,
+                 plot_change = NULL, y_axis_breaks = NULL, recession_bars = TRUE,
                  include_smooth = FALSE, diagonal_x_labels = TRUE)
 
 create_line_plot(data = fm_impulse_data, var_name = "rolling_annual_gross_ust_outlays", start_year = 2000, end_year = 2023,
@@ -55,9 +84,9 @@ create_line_plot(data = fm_impulse_data, var_name = "rolling_annual_gross_ust_ou
                  include_smooth = FALSE)
 
 create_multi_line_plot(data = monthly_data, var_name_list = c("bank_assets_sa", "bank_loans", "bank_securities_sa"),
-                       start_year = 1980, end_year = 2023, var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
+                       start_date = "1980-01-01", end_date = "2024-01-01", var_label_list = c("Bank Assets", "Bank Loans", "Bank Securities"),
                        x_axis_breaks = 5, x_axis_title = "", y_axis_title = "Billions of Dollars", title = "Commercial Banks",
-                       include_smooth = FALSE, var_changes = NULL)
+                       include_smooth = FALSE, var_changes = NULL, recession_bars = TRUE)
 
 create_two_axis_line_plot(data = monthly_data, variables = c("fed_funds_rate", "cpi"),
                           var_labels = c("Fed Funds Rate (%)", "CPI"), start_date = "2000-01-01",
