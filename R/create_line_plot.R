@@ -148,7 +148,7 @@ create_line_plot <- function(data, var_name, start_date, end_date, x_axis_breaks
   # Add recession bars if recession_bars is TRUE
   if (recession_bars) {
     p <- p + geom_rect(data = get_recession_periods(data) %>%
-                         filter(start >= as.Date(start_date) & end <= as.Date(paste0(end_year, "-12-31"))),
+                         filter(start >= as.Date(start_date) & end <= as.Date(end_date)),
                        aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.5, inherit.aes = FALSE)
   }
 
