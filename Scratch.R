@@ -33,7 +33,7 @@ create_multi_line_plot(data = fm_impulse_data, var_name_list = c("m2", "m2_less_
                        start_date = "2000-01-01", end_date = "2023-01-01", var_label_list = c("M2", "M2 Less Reserves"),
                        x_axis_title = "", y_axis_title = "$b", title = "M2", x_axis_breaks = 24,
                        y_axis_breaks = 1000, lof_span = 0.1, use_month_intervals = TRUE, recession_bars = TRUE,
-                       var_changes = NULL, include_smooth = TRUE, diagonal_x_labels = TRUE)
+                       var_changes = NULL, include_smooth = FALSE, diagonal_x_labels = TRUE)
 
 create_heatmap_plot(data = monthly_data, var_name = "initial_claims_nsa", start_year = 2000,
                     end_year = 2024, x_axis_breaks = 5, title = "Initial Claims NSA",

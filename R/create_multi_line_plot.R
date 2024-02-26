@@ -152,7 +152,7 @@ create_multi_line_plot <- function(data, var_name_list, var_label_list, start_da
     filter(date >= as.Date(start_date) & date <= as.Date(end_date))
 
   # Base plot
-  p <- ggplot(long_data, aes(x = date, y = value, color = variable_label))
+  p <- ggplot(long_data, aes(x = date, y = value, color = variable_label)) +
     geom_line()
 
   # Add recession bars if recession_bars is TRUE
